@@ -2,9 +2,11 @@ package com.mjc.school.service.implementation;
 
 
 import com.mjc.school.repository.implementation.AuthorRepository;
+import com.mjc.school.repository.implementation.CommentRepository;
 import com.mjc.school.repository.implementation.NewsRepository;
 import com.mjc.school.repository.implementation.TagRepository;
 import com.mjc.school.repository.model.AuthorModel;
+import com.mjc.school.repository.model.CommentModel;
 import com.mjc.school.repository.model.NewsModel;
 import com.mjc.school.repository.model.TagModel;
 import com.mjc.school.service.BaseService;
@@ -33,12 +35,14 @@ NewsService implements BaseService<NewsDtoRequest, NewsDtoResponse, Long> {
     private final NewsRepository newsRepository;
     private final AuthorRepository authorRepository;
     private final TagRepository tagRepository;
+    private final CommentRepository commentRepository;
 
     @Autowired
-    public NewsService(NewsRepository newsRepository, AuthorRepository authorRepository, TagRepository tagRepository) {
+    public NewsService(NewsRepository newsRepository, AuthorRepository authorRepository, TagRepository tagRepository, CommentRepository commentRepository) {
         this.newsRepository = newsRepository;
         this.authorRepository = authorRepository;
         this.tagRepository = tagRepository;
+        this.commentRepository = commentRepository;
     }
 
     @Override
@@ -46,7 +50,7 @@ NewsService implements BaseService<NewsDtoRequest, NewsDtoResponse, Long> {
         return NewsMapper.INSTANCE.listNewsToNewsDtoResponse(newsRepository.readAll());
     }
 
-    @Validate(value = "checkNewsId")
+    @Validate
     @Override
     public NewsDtoResponse readById(Long id) {
         if (newsRepository.existById(id)) {
@@ -59,7 +63,7 @@ NewsService implements BaseService<NewsDtoRequest, NewsDtoResponse, Long> {
 
     @Override
     @Transactional
-    @Validate(value = "checkNews")
+    @Validate
     public NewsDtoResponse create(NewsDtoRequest createRequest) {
         if (authorRepository.existById(createRequest.getAuthorId())) {
             NewsModel newsModel = NewsMapper.INSTANCE.newsDtoRequestToNews(createRequest);
@@ -78,7 +82,7 @@ NewsService implements BaseService<NewsDtoRequest, NewsDtoResponse, Long> {
     }
 
     @Transactional
-    @Validate(value = "checkNews")
+    @Validate
     @Override
     public NewsDtoResponse update(NewsDtoRequest updateRequest) {
         if (newsRepository.existById(updateRequest.getId())) {
@@ -91,8 +95,10 @@ NewsService implements BaseService<NewsDtoRequest, NewsDtoResponse, Long> {
                 if (tagRepository.existById(updateRequest.getTagId())) {
                     TagModel tagModel = tagRepository.readById(updateRequest.getTagId()).get();
                     newsModel.addTag(tagModel);
-                } else {
-                    throw new NotFoundException(TAG_NOT_EXIST);
+                }
+                if(commentRepository.existById(updateRequest.getCommentId())){
+                    CommentModel commentModel = commentRepository.readById(updateRequest.getCommentId()).get();
+                    newsModel.addComment(commentModel);
                 }
                 NewsModel updatedNewsModel = newsRepository.update(newsModel);
                 return NewsMapper.INSTANCE.newsToNewsDtoResponse(updatedNewsModel);
@@ -103,7 +109,7 @@ NewsService implements BaseService<NewsDtoRequest, NewsDtoResponse, Long> {
     }
 
     @Transactional
-    @Validate(value = "checkNewsId")
+    @Validate
     @Override
     public boolean deleteById(Long id) {
         if (newsRepository.existById(id)) {

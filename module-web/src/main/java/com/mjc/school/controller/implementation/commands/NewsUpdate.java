@@ -28,7 +28,9 @@ public class NewsUpdate extends NewsBaseCommand implements Command {
         long authorId = Long.parseLong(scanner.nextLine());
         System.out.println(Constants.NEWS_TAG_ID);
         long tagId = Long.parseLong(scanner.nextLine());
-        NewsDtoRequest newsDtoRequest = new NewsDtoRequest(Long.parseLong(newsId), title, content, authorId, tagId);
+        System.out.println(Constants.COMMENT_ID);
+        long commentId = Long.parseLong(scanner.nextLine());
+        NewsDtoRequest newsDtoRequest = new NewsDtoRequest(Long.parseLong(newsId), title, content, authorId, tagId, commentId);
         System.out.println(newsController.update(newsDtoRequest));
         return true;
     }

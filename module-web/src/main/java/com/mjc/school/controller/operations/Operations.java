@@ -1,6 +1,7 @@
 package com.mjc.school.controller.operations;
 
 import com.mjc.school.controller.implementation.AuthorController;
+import com.mjc.school.controller.implementation.CommentController;
 import com.mjc.school.controller.implementation.NewsController;
 import com.mjc.school.controller.implementation.TagController;
 import com.mjc.school.controller.implementation.commands.*;
@@ -115,6 +116,36 @@ public enum Operations {
         @Override
         public <T> Command getOperation(Scanner scanner, T controller) {
             return new TagDelete(scanner, (TagController) controller);
+        }
+    },
+    GET_ALL_COMMENT(19, "Get all comments") {
+        @Override
+        public <T> Command getOperation(Scanner scanner, T controller) {
+            return new CommentGetAll(scanner, (CommentController) controller);
+        }
+    },
+    GET_COMMENT_BY_ID(20, "Get comment by ID") {
+        @Override
+        public <T> Command getOperation(Scanner scanner, T controller) {
+            return new CommentGetById(scanner, (CommentController) controller);
+        }
+    },
+    CREATE_COMMENT(21, "Create comment") {
+        @Override
+        public <T> Command getOperation(Scanner scanner, T controller) {
+            return new CommentCreate(scanner, (CommentController) controller);
+        }
+    },
+    UPDATE_COMMENT(22, "Update comment") {
+        @Override
+        public <T> Command getOperation(Scanner scanner, T controller) {
+            return new CommentUpdate(scanner, (CommentController) controller);
+        }
+    },
+    DELETE_COMMENT(23, "Delete comment") {
+        @Override
+        public <T> Command getOperation(Scanner scanner, T controller) {
+            return new CommentDelete(scanner, (CommentController) controller);
         }
     },
 

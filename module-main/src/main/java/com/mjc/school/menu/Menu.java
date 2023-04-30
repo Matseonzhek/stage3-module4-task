@@ -36,7 +36,6 @@ public class Menu {
                 } else System.out.println(WRONG_NUMBER_OF_OPERATION);
             } catch (RuntimeException e) {
                 System.out.println(e.getMessage());
-                ;
             }
         }
     }

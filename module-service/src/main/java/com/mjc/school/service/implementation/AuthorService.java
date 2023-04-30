@@ -32,7 +32,7 @@ public class AuthorService implements BaseService<AuthorDtoRequest, AuthorDtoRes
         return AuthorMapper.INSTANCE.listAuthorToAuthorDtoResponse(authorRepository.readAll());
     }
 
-    @Validate(value = "checkAuthorId")
+    @Validate
     @Override
     public AuthorDtoResponse readById(Long id) {
         if (authorRepository.existById(id)) {
@@ -43,7 +43,7 @@ public class AuthorService implements BaseService<AuthorDtoRequest, AuthorDtoRes
     }
 
     @Transactional
-    @Validate(value = "checkAuthor")
+    @Validate
     @Override
     public AuthorDtoResponse create(AuthorDtoRequest createRequest) {
         AuthorModel authorModel = AuthorMapper.INSTANCE.authorDtoRequestToAuthorModel(createRequest);
@@ -52,7 +52,7 @@ public class AuthorService implements BaseService<AuthorDtoRequest, AuthorDtoRes
     }
 
     @Transactional
-    @Validate(value = "checkAuthor")
+    @Validate
     @Override
     public AuthorDtoResponse update(AuthorDtoRequest updateRequest) {
         if (authorRepository.existById(updateRequest.getId())) {
@@ -65,7 +65,7 @@ public class AuthorService implements BaseService<AuthorDtoRequest, AuthorDtoRes
     }
 
     @Transactional
-    @Validate(value = "checkAuthorId")
+    @Validate
     @Override
     public boolean deleteById(Long id) {
         if (authorRepository.existById(id)) {

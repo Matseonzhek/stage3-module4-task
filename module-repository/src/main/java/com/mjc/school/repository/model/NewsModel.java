@@ -15,8 +15,15 @@ import java.util.Objects;
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "news")
 public class NewsModel implements BaseEntity<Long> {
+
     @ManyToOne
     private AuthorModel authorModel;
+
+    @OneToMany(mappedBy = "newsModel", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JoinTable(name = "news_comment",
+//            joinColumns = @JoinColumn(name = "news_id"),
+//            inverseJoinColumns = @JoinColumn(name = "content_id"))
+    private List<CommentModel> comments;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(name = "news_tag",
@@ -118,6 +125,16 @@ public class NewsModel implements BaseEntity<Long> {
     public void removeTag(TagModel tagModel) {
         taggedNews.remove(tagModel);
         tagModel.getTags().remove(this);
+    }
+
+    public void addComment(CommentModel commentModel) {
+        comments.add(commentModel);
+        commentModel.setNewsModel(this);
+    }
+
+    public void removeComment(CommentModel commentModel) {
+        comments.remove(commentModel);
+        commentModel.setNewsModel(null);
     }
 
     @Override

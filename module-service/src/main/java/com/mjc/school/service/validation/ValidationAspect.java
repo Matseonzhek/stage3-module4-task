@@ -2,6 +2,7 @@ package com.mjc.school.service.validation;
 
 import com.mjc.school.service.annotation.Validate;
 import com.mjc.school.service.dto.AuthorDtoRequest;
+import com.mjc.school.service.dto.CommentDtoRequest;
 import com.mjc.school.service.dto.NewsDtoRequest;
 import com.mjc.school.service.dto.TagDtoRequest;
 import com.mjc.school.service.exception.ValidationException;
@@ -51,6 +52,11 @@ public class ValidationAspect {
     @Before(value = "@annotation(com.mjc.school.service.annotation.Validate)&&args(tagDtoRequest)")
     public void checkTagDtoRequest(TagDtoRequest tagDtoRequest) {
         validateString(tagDtoRequest.getName(), TAG_ID, TAG_NAME_MIN, TAG_NAME_MAX);
+    }
+
+    @Before(value = "@annotation(com.mjc.school.service.annotation.Validate)&&args(commentDtoRequest)")
+    public void checkContentDtoRequest(CommentDtoRequest commentDtoRequest){
+        validateString(commentDtoRequest.getContent(), COMMENT_ID,COMMENT_CONTENT_MIN,COMMENT_CONTENT_MAX);
     }
 
     void validateString(String value, String parameter, int minNumber, int maxNumber) {

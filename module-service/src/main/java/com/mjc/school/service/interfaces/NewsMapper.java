@@ -18,6 +18,7 @@ public interface NewsMapper {
 
     @Mapping(target = "authorId", ignore = true)
     @Mapping(target = "tagId", ignore = true)
+    @Mapping(target = "commentId", ignore = true)
     NewsDtoRequest newsToNewsDtoRequest(NewsModel newsModel);
 
     @Mapping(target = "createDate", ignore = true)

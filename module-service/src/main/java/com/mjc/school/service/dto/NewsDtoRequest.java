@@ -11,15 +11,26 @@ public class NewsDtoRequest {
     private long authorId;
     private long tagId;
 
+    public long getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(long commentId) {
+        this.commentId = commentId;
+    }
+
+    private long commentId;
+
     public NewsDtoRequest() {
     }
 
-    public NewsDtoRequest(Long id, String title, String content, long authorId, long tagId) {
+    public NewsDtoRequest(Long id, String title, String content, long authorId, long tagId, long commentId) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.authorId = authorId;
         this.tagId = tagId;
+        this.commentId = commentId;
     }
 
     public Long getId() {
@@ -70,6 +81,7 @@ public class NewsDtoRequest {
                 ", content='" + content + '\'' +
                 ", authorId=" + authorId +
                 ", tagId=" + tagId +
+                ", commentId=" + commentId +
                 '}';
     }
 }

@@ -2,6 +2,7 @@ package com.mjc.school.controller.implementation.comandsManagement;
 
 import com.mjc.school.controller.constants.Constants;
 import com.mjc.school.controller.implementation.AuthorController;
+import com.mjc.school.controller.implementation.CommentController;
 import com.mjc.school.controller.implementation.NewsController;
 import com.mjc.school.controller.implementation.TagController;
 import com.mjc.school.controller.implementation.commands.ExitCommand;
@@ -21,13 +22,15 @@ public class CommandsManagement {
     private final NewsController newsController;
     private final AuthorController authorController;
     private final TagController tagController;
+    private final CommentController commentController;
 
     @Autowired
-    public CommandsManagement(NewsController newsController, AuthorController authorController,TagController tagController) {
+    public CommandsManagement(NewsController newsController, AuthorController authorController, TagController tagController, CommentController commentController) {
         this.newsController = newsController;
         this.authorController = authorController;
         this.tagController = tagController;
 
+        this.commentController = commentController;
     }
 
     public Command getCommand(Scanner scanner, Integer operationNumber) {
@@ -45,6 +48,9 @@ public class CommandsManagement {
         }
         if(operationNumber>=Constants.TAG_FIRST_OPERATION&&operationNumber<=Constants.TAG_LAST_OPERATION){
             return operations.getOperation(scanner,tagController);
+        }
+        if(operationNumber>=Constants.COMMENT_FIRST_OPERATION&&operationNumber<=Constants.COMMENT_LAST_OPERATION){
+            return operations.getOperation(scanner,commentController);
         }
         return new ExitCommand();
     }
