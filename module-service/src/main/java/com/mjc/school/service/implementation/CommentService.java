@@ -35,7 +35,7 @@ public class CommentService implements BaseService<CommentDtoRequest, CommentDto
     }
 
     @Transactional
-    @Validate
+    @Validate(value = "checkId")
     @Override
     public CommentDtoResponse readById(Long id) {
         if (commentRepository.existById(id)) {
@@ -45,7 +45,7 @@ public class CommentService implements BaseService<CommentDtoRequest, CommentDto
     }
 
     @Transactional
-    @Validate
+    @Validate(value = "checkComment")
     @Override
     public CommentDtoResponse create(CommentDtoRequest createRequest) {
         if (newsRepository.existById(createRequest.getNewsModelId())) {
@@ -59,7 +59,7 @@ public class CommentService implements BaseService<CommentDtoRequest, CommentDto
     }
 
     @Transactional
-    @Validate
+    @Validate(value = "checkComment")
     @Override
     public CommentDtoResponse update(CommentDtoRequest updateRequest) {
         if (newsRepository.existById(updateRequest.getNewsModelId())) {
@@ -75,7 +75,7 @@ public class CommentService implements BaseService<CommentDtoRequest, CommentDto
     }
 
     @Transactional
-    @Validate
+    @Validate(value = "checkId")
     @Override
     public boolean deleteById(Long id) {
         if (commentRepository.existById(id)) {

@@ -25,7 +25,7 @@ public class ValidationAspect {
         methodSignature.getMethod();
         Validate validate = methodSignature.getMethod().getAnnotation(Validate.class);
         String value = validate.value();
-        if (value.equals("checkNewsId")) {
+        if (value.equals("checkId")) {
             validateNumber(id, NEWS_ID);
         }
     }
@@ -45,18 +45,36 @@ public class ValidationAspect {
     }
 
     @Before(value = "@annotation(com.mjc.school.service.annotation.Validate)&&args(authorDtoRequest)")
-    public void checkAuthorDtoRequest(AuthorDtoRequest authorDtoRequest) {
-        validateString(authorDtoRequest.getName(), AUTHOR_ID, AUTHOR_NAME_MIN, AUTHOR_NAME_MAX);
+    public void checkAuthorDtoRequest(JoinPoint joinPoint, AuthorDtoRequest authorDtoRequest) {
+        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+        methodSignature.getMethod();
+        Validate validate = methodSignature.getMethod().getAnnotation(Validate.class);
+        String value = validate.value();
+        if (value.equals("checkAuthor")) {
+            validateString(authorDtoRequest.getName(), AUTHOR_ID, AUTHOR_NAME_MIN, AUTHOR_NAME_MAX);
+        }
     }
 
     @Before(value = "@annotation(com.mjc.school.service.annotation.Validate)&&args(tagDtoRequest)")
-    public void checkTagDtoRequest(TagDtoRequest tagDtoRequest) {
-        validateString(tagDtoRequest.getName(), TAG_ID, TAG_NAME_MIN, TAG_NAME_MAX);
+    public void checkTagDtoRequest(JoinPoint joinPoint, TagDtoRequest tagDtoRequest) {
+        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+        methodSignature.getMethod();
+        Validate validate = methodSignature.getMethod().getAnnotation(Validate.class);
+        String value = validate.value();
+        if (value.equals("checkTag")) {
+            validateString(tagDtoRequest.getName(), TAG_ID, TAG_NAME_MIN, TAG_NAME_MAX);
+        }
     }
 
     @Before(value = "@annotation(com.mjc.school.service.annotation.Validate)&&args(commentDtoRequest)")
-    public void checkContentDtoRequest(CommentDtoRequest commentDtoRequest){
-        validateString(commentDtoRequest.getContent(), COMMENT_ID,COMMENT_CONTENT_MIN,COMMENT_CONTENT_MAX);
+    public void checkContentDtoRequest(JoinPoint joinPoint, CommentDtoRequest commentDtoRequest) {
+        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+        methodSignature.getMethod();
+        Validate validate = methodSignature.getMethod().getAnnotation(Validate.class);
+        String value = validate.value();
+        if (value.equals("checkComment")) {
+            validateString(commentDtoRequest.getContent(), COMMENT_ID, COMMENT_CONTENT_MIN, COMMENT_CONTENT_MAX);
+        }
     }
 
     void validateString(String value, String parameter, int minNumber, int maxNumber) {

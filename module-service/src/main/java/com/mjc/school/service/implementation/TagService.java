@@ -32,7 +32,7 @@ public class TagService implements BaseService<TagDtoRequest, TagDtoResponse, Lo
         return TagMapper.INSTANCE.listTagToTagDtoResponse(tagRepository.readAll());
     }
 
-    @Validate
+    @Validate(value = "checkId")
     @Override
     public TagDtoResponse readById(Long id) {
         if (tagRepository.existById(id)) {
@@ -40,14 +40,14 @@ public class TagService implements BaseService<TagDtoRequest, TagDtoResponse, Lo
         } else throw new NotFoundException(TAG_NOT_EXIST);
     }
 
-    @Validate
+    @Validate(value = "checkTag")
     @Transactional
     @Override
     public TagDtoResponse create(TagDtoRequest createRequest) {
         return TagMapper.INSTANCE.tagToTagDtoResponse(tagRepository.create(TagMapper.INSTANCE.tagDtoRequestToTag(createRequest)));
     }
 
-    @Validate
+    @Validate(value = "checkTag")
     @Transactional
     @Override
     public TagDtoResponse update(TagDtoRequest updateRequest) {
@@ -59,7 +59,7 @@ public class TagService implements BaseService<TagDtoRequest, TagDtoResponse, Lo
         } else throw new NotFoundException(TAG_NOT_EXIST);
     }
 
-    @Validate
+    @Validate(value = "checkId")
     @Transactional
     @Override
     public boolean deleteById(Long id) {

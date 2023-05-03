@@ -50,7 +50,7 @@ NewsService implements BaseService<NewsDtoRequest, NewsDtoResponse, Long> {
         return NewsMapper.INSTANCE.listNewsToNewsDtoResponse(newsRepository.readAll());
     }
 
-    @Validate
+    @Validate(value = "checkId")
     @Override
     public NewsDtoResponse readById(Long id) {
         if (newsRepository.existById(id)) {
@@ -63,7 +63,7 @@ NewsService implements BaseService<NewsDtoRequest, NewsDtoResponse, Long> {
 
     @Override
     @Transactional
-    @Validate
+    @Validate(value = "checkNews")
     public NewsDtoResponse create(NewsDtoRequest createRequest) {
         if (authorRepository.existById(createRequest.getAuthorId())) {
             NewsModel newsModel = NewsMapper.INSTANCE.newsDtoRequestToNews(createRequest);
@@ -82,7 +82,7 @@ NewsService implements BaseService<NewsDtoRequest, NewsDtoResponse, Long> {
     }
 
     @Transactional
-    @Validate
+    @Validate(value = "checkNews")
     @Override
     public NewsDtoResponse update(NewsDtoRequest updateRequest) {
         if (newsRepository.existById(updateRequest.getId())) {
@@ -109,7 +109,7 @@ NewsService implements BaseService<NewsDtoRequest, NewsDtoResponse, Long> {
     }
 
     @Transactional
-    @Validate
+    @Validate(value = "checkId")
     @Override
     public boolean deleteById(Long id) {
         if (newsRepository.existById(id)) {
