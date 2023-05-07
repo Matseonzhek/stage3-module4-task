@@ -1,10 +1,14 @@
 package com.mjc.school.repository.implementation;
 
 import com.mjc.school.repository.BaseRepository;
+import com.mjc.school.repository.NewsPageRepository;
 import com.mjc.school.repository.model.AuthorModel;
 import com.mjc.school.repository.model.NewsModel;
 import com.mjc.school.repository.model.TagModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
@@ -18,10 +22,17 @@ import java.util.Optional;
 public class NewsRepository implements BaseRepository<NewsModel, Long> {
 
     private final EntityManager entityManager;
+    private final NewsPageRepository newsPageRepository;
 
     @Autowired
-    public NewsRepository(EntityManager entityManager) {
+    public NewsRepository(EntityManager entityManager, NewsPageRepository newsPageRepository) {
         this.entityManager = entityManager;
+        this.newsPageRepository = newsPageRepository;
+    }
+
+    @Query(value = "select news from NewsModel news")
+    public Page<NewsModel> getPagedList(Pageable pageable) {
+        return newsPageRepository.findAll(pageable);
     }
 
     @Override

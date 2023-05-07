@@ -5,10 +5,17 @@ import com.mjc.school.service.dto.NewsDtoRequest;
 import com.mjc.school.service.dto.NewsDtoResponse;
 import com.mjc.school.service.implementation.NewsService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 @RequestMapping(value = "/news")
@@ -23,9 +30,22 @@ public class NewsRestController implements BaseRestController<NewsDtoRequest, Ne
     }
 
 
+    @GetMapping
     @Override
-    public ResponseEntity<Page<NewsDtoResponse>> readAll(int size, int page, String sortBy, PagedResourcesAssembler pagedResourcesAssembler) {
-        return null;
+    public ResponseEntity<CollectionModel<NewsDtoResponse>> findAll(
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam String sortBy) {
+        Sort sort = Sort.by(sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<NewsDtoResponse> newsDtoResponsePage = newsService.findAll(pageable);
+        for (NewsDtoResponse newsDtoResponse : newsDtoResponsePage) {
+            Long id = newsDtoResponse.getId();
+            Link selfLink = linkTo(NewsRestController.class).slash(id).withSelfRel();
+            newsDtoResponse.add(selfLink);
+        }
+        Link link = linkTo(NewsRestController.class).withSelfRel();
+        return new ResponseEntity<>(PagedModel.of(newsDtoResponsePage, link), HttpStatus.OK);
     }
 
     @GetMapping(value = "{id}")
@@ -52,7 +72,7 @@ public class NewsRestController implements BaseRestController<NewsDtoRequest, Ne
 
     @DeleteMapping(value = "/{id}")
     @Override
-    public boolean deleteById(@PathVariable Long id) {
-        return newsService.deleteById(id);
+    public ResponseEntity<Boolean> deleteById(@PathVariable Long id) {
+        return new ResponseEntity<>(newsService.deleteById(id), HttpStatus.NO_CONTENT);
     }
 }

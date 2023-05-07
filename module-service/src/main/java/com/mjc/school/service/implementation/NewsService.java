@@ -10,6 +10,7 @@ import com.mjc.school.repository.model.CommentModel;
 import com.mjc.school.repository.model.NewsModel;
 import com.mjc.school.repository.model.TagModel;
 import com.mjc.school.service.BaseService;
+import com.mjc.school.service.PageService;
 import com.mjc.school.service.annotation.Validate;
 import com.mjc.school.service.dto.AuthorDtoResponse;
 import com.mjc.school.service.dto.NewsDtoRequest;
@@ -19,7 +20,10 @@ import com.mjc.school.service.exception.NotFoundException;
 import com.mjc.school.service.interfaces.AuthorMapper;
 import com.mjc.school.service.interfaces.NewsMapper;
 import com.mjc.school.service.interfaces.TagMapper;
+import com.mjc.school.service.utils.PageConvert;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -30,7 +34,7 @@ import static com.mjc.school.service.constants.Constants.*;
 
 @Service
 public class
-NewsService implements BaseService<NewsDtoRequest, NewsDtoResponse, Long> {
+NewsService implements BaseService<NewsDtoRequest, NewsDtoResponse, Long>, PageService<NewsDtoRequest, NewsDtoResponse, Long> {
 
     private final NewsRepository newsRepository;
     private final AuthorRepository authorRepository;
@@ -49,6 +53,13 @@ NewsService implements BaseService<NewsDtoRequest, NewsDtoResponse, Long> {
     public List<NewsDtoResponse> readAll() {
         return NewsMapper.INSTANCE.listNewsToNewsDtoResponse(newsRepository.readAll());
     }
+
+    @Override
+    public Page<NewsDtoResponse> findAll(Pageable pageable) {
+        Page<NewsModel> newsModelPage = newsRepository.getPagedList(pageable);
+        return new PageConvert().pageNewsToNewsDtoResponse(newsModelPage);
+    }
+
 
     @Validate(value = "checkId")
     @Override
@@ -137,4 +148,6 @@ NewsService implements BaseService<NewsDtoRequest, NewsDtoResponse, Long> {
         return NewsMapper.INSTANCE.listNewsToNewsDtoResponse
                 (newsRepository.getNewsByOption(tagName, tagId, authorName, title, content));
     }
+
+
 }
