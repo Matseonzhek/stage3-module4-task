@@ -19,14 +19,17 @@ subprojects {
     }
 
     dependencies {
-//        implementation "org.springframework:spring-context:$springVersion"
+        implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+
+        annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
         implementation "org.springframework.boot:spring-boot-starter-aop:$aopVersion"
         implementation "org.aspectj:aspectjweaver:$aspectVersion"
         implementation "org.springframework.boot:spring-boot-starter-data-jpa:$jpaVersion"
-//        implementation 'org.springframework.boot:spring-boot-starter-jdbc:3.0.5'
         implementation "org.postgresql:postgresql:$postgresVersion"
         implementation "org.hibernate:hibernate-entitymanager:6.0.0.Alpha7"
         implementation "org.springframework.boot:spring-boot-starter-web:$MvcVersion"
+        implementation "org.springframework.boot:spring-boot-starter-hateoas:$MvcVersion"
+
 
 
 

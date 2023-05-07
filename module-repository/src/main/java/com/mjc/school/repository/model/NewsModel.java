@@ -20,9 +20,6 @@ public class NewsModel implements BaseEntity<Long> {
     private AuthorModel authorModel;
 
     @OneToMany(mappedBy = "newsModel", cascade = CascadeType.ALL, orphanRemoval = true)
-//    @JoinTable(name = "news_comment",
-//            joinColumns = @JoinColumn(name = "news_id"),
-//            inverseJoinColumns = @JoinColumn(name = "content_id"))
     private List<CommentModel> comments;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)

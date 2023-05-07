@@ -96,7 +96,7 @@ NewsService implements BaseService<NewsDtoRequest, NewsDtoResponse, Long> {
                     TagModel tagModel = tagRepository.readById(updateRequest.getTagId()).get();
                     newsModel.addTag(tagModel);
                 }
-                if(commentRepository.existById(updateRequest.getCommentId())){
+                if (commentRepository.existById(updateRequest.getCommentId())) {
                     CommentModel commentModel = commentRepository.readById(updateRequest.getCommentId()).get();
                     newsModel.addComment(commentModel);
                 }

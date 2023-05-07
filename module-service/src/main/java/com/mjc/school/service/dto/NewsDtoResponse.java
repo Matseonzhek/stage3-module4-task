@@ -1,11 +1,12 @@
 package com.mjc.school.service.dto;
 
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
 @Component
-public class NewsDtoResponse {
+public class NewsDtoResponse extends RepresentationModel<NewsDtoResponse> {
     private Long id;
     private String title;
     private String content;

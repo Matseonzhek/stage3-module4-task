@@ -10,15 +10,6 @@ public class NewsDtoRequest {
     private String content;
     private long authorId;
     private long tagId;
-
-    public long getCommentId() {
-        return commentId;
-    }
-
-    public void setCommentId(long commentId) {
-        this.commentId = commentId;
-    }
-
     private long commentId;
 
     public NewsDtoRequest() {
@@ -30,6 +21,14 @@ public class NewsDtoRequest {
         this.content = content;
         this.authorId = authorId;
         this.tagId = tagId;
+        this.commentId = commentId;
+    }
+
+    public long getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(long commentId) {
         this.commentId = commentId;
     }
 

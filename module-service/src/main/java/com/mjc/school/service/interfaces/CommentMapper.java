@@ -15,9 +15,8 @@ public interface CommentMapper {
     CommentMapper INSTANCE = Mappers.getMapper(CommentMapper.class);
 
     @Mapping(target = "newsModelId", ignore = true)
-    CommentDtoRequest commentToCommentDtoRequest (CommentModel commentModel);
+    CommentDtoRequest commentToCommentDtoRequest(CommentModel commentModel);
 
-//    @Mapping(target = "newsModel", ignore = true)
     CommentDtoResponse commentToCommentDtoResponse(CommentModel commentModel);
 
     @Mapping(target = "createdDate", ignore = true)
