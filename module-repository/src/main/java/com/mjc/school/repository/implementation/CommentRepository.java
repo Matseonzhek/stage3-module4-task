@@ -1,11 +1,15 @@
 package com.mjc.school.repository.implementation;
 
 import com.mjc.school.repository.BaseRepository;
+import com.mjc.school.repository.CommentPageRepository;
 import com.mjc.school.repository.model.CommentModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
@@ -14,10 +18,16 @@ import java.util.Optional;
 public class CommentRepository implements BaseRepository<CommentModel, Long> {
 
     private final EntityManager entityManager;
+    private final CommentPageRepository commentRepository;
 
     @Autowired
-    public CommentRepository(EntityManager entityManager) {
+    public CommentRepository(EntityManager entityManager, CommentPageRepository commentRepository) {
         this.entityManager = entityManager;
+        this.commentRepository = commentRepository;
+    }
+
+    public Page<CommentModel> findAll(Pageable pageable) {
+        return commentRepository.findAll(pageable);
     }
 
     @Override
@@ -62,6 +72,9 @@ public class CommentRepository implements BaseRepository<CommentModel, Long> {
 
     @Override
     public boolean existById(Long id) {
-        return readById(id).isPresent();
+        String jpql = " select count (comments.id)  from CommentModel comments where comments.id=?1";
+        Query query = entityManager.createQuery(jpql).setParameter(1, id);
+        Long count = (Long) query.getSingleResult();
+        return count > 0;
     }
 }

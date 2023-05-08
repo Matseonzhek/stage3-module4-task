@@ -4,12 +4,16 @@ package com.mjc.school.service.implementation;
 import com.mjc.school.repository.implementation.AuthorRepository;
 import com.mjc.school.repository.model.AuthorModel;
 import com.mjc.school.service.BaseService;
+import com.mjc.school.service.PageService;
 import com.mjc.school.service.annotation.Validate;
 import com.mjc.school.service.dto.AuthorDtoRequest;
 import com.mjc.school.service.dto.AuthorDtoResponse;
 import com.mjc.school.service.exception.NotFoundException;
 import com.mjc.school.service.interfaces.AuthorMapper;
+import com.mjc.school.service.utils.AuthorPageConvert;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -18,7 +22,7 @@ import java.util.List;
 import static com.mjc.school.service.constants.Constants.AUTHOR_NOT_EXIST;
 
 @Service(value = "authorService")
-public class AuthorService implements BaseService<AuthorDtoRequest, AuthorDtoResponse, Long> {
+public class AuthorService implements BaseService<AuthorDtoRequest, AuthorDtoResponse, Long>, PageService<AuthorDtoRequest, AuthorDtoResponse, Long> {
 
     private final AuthorRepository authorRepository;
 
@@ -30,6 +34,11 @@ public class AuthorService implements BaseService<AuthorDtoRequest, AuthorDtoRes
     @Override
     public List<AuthorDtoResponse> readAll() {
         return AuthorMapper.INSTANCE.listAuthorToAuthorDtoResponse(authorRepository.readAll());
+    }
+
+    @Override
+    public Page<AuthorDtoResponse> findAll(Pageable pageable) {
+        return new AuthorPageConvert().pageAuthorToAuthorDtoResponse(authorRepository.findAll(pageable));
     }
 
     @Validate(value = "checkId")
@@ -76,4 +85,5 @@ public class AuthorService implements BaseService<AuthorDtoRequest, AuthorDtoRes
         }
 
     }
+
 }

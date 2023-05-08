@@ -5,20 +5,24 @@ import com.mjc.school.repository.implementation.NewsRepository;
 import com.mjc.school.repository.model.CommentModel;
 import com.mjc.school.repository.model.NewsModel;
 import com.mjc.school.service.BaseService;
+import com.mjc.school.service.PageService;
 import com.mjc.school.service.annotation.Validate;
 import com.mjc.school.service.constants.Constants;
 import com.mjc.school.service.dto.CommentDtoRequest;
 import com.mjc.school.service.dto.CommentDtoResponse;
 import com.mjc.school.service.exception.NotFoundException;
 import com.mjc.school.service.interfaces.CommentMapper;
+import com.mjc.school.service.utils.CommentPageConvertor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
-public class CommentService implements BaseService<CommentDtoRequest, CommentDtoResponse, Long> {
+public class CommentService implements BaseService<CommentDtoRequest, CommentDtoResponse, Long>, PageService<CommentDtoRequest, CommentDtoResponse, Long> {
 
     private final NewsRepository newsRepository;
     private final CommentRepository commentRepository;
@@ -27,6 +31,11 @@ public class CommentService implements BaseService<CommentDtoRequest, CommentDto
     public CommentService(NewsRepository newsRepository, CommentRepository commentRepository) {
         this.newsRepository = newsRepository;
         this.commentRepository = commentRepository;
+    }
+
+    @Override
+    public Page<CommentDtoResponse> findAll(Pageable pageable) {
+        return new CommentPageConvertor().pageToCommentDtoResponse(commentRepository.findAll(pageable));
     }
 
     @Override
@@ -54,6 +63,7 @@ public class CommentService implements BaseService<CommentDtoRequest, CommentDto
             commentModel.setNewsModel(newsModel);
             commentModel.setContent(createRequest.getContent());
             CommentModel createdCommentModel = commentRepository.create(commentModel);
+            newsModel.addComment(createdCommentModel);
             return CommentMapper.INSTANCE.commentToCommentDtoResponse(createdCommentModel);
         } else throw new NotFoundException(Constants.NEWS_NOT_EXIST);
     }

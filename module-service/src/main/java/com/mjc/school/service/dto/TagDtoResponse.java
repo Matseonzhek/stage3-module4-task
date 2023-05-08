@@ -1,14 +1,19 @@
 package com.mjc.school.service.dto;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import java.util.Objects;
 
-public class TagDtoResponse {
+public class TagDtoResponse extends RepresentationModel<TagDtoResponse> {
     private Long id;
     private String name;
 
     public TagDtoResponse(Long id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public TagDtoResponse() {
     }
 
     public Long getId() {

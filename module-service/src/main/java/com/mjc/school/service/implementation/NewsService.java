@@ -20,7 +20,7 @@ import com.mjc.school.service.exception.NotFoundException;
 import com.mjc.school.service.interfaces.AuthorMapper;
 import com.mjc.school.service.interfaces.NewsMapper;
 import com.mjc.school.service.interfaces.TagMapper;
-import com.mjc.school.service.utils.PageConvert;
+import com.mjc.school.service.utils.NewsPageConvert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -57,7 +57,7 @@ NewsService implements BaseService<NewsDtoRequest, NewsDtoResponse, Long>, PageS
     @Override
     public Page<NewsDtoResponse> findAll(Pageable pageable) {
         Page<NewsModel> newsModelPage = newsRepository.getPagedList(pageable);
-        return new PageConvert().pageNewsToNewsDtoResponse(newsModelPage);
+        return new NewsPageConvert().pageNewsToNewsDtoResponse(newsModelPage);
     }
 
 

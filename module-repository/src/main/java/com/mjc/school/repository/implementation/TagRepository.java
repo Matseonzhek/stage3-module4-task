@@ -1,8 +1,12 @@
 package com.mjc.school.repository.implementation;
 
 import com.mjc.school.repository.BaseRepository;
+import com.mjc.school.repository.TagPageRepository;
 import com.mjc.school.repository.model.TagModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -14,10 +18,12 @@ import java.util.Optional;
 public class TagRepository implements BaseRepository<TagModel, Long> {
 
     private final EntityManager entityManager;
+    private final TagPageRepository tagRepository;
 
     @Autowired
-    public TagRepository(EntityManager entityManager) {
+    public TagRepository(EntityManager entityManager, TagPageRepository tagRepository) {
         this.entityManager = entityManager;
+        this.tagRepository = tagRepository;
     }
 
     @Override
@@ -25,6 +31,11 @@ public class TagRepository implements BaseRepository<TagModel, Long> {
         String jpql = "select tag from TagModel tag order by tag.id";
         TypedQuery<TagModel> query = entityManager.createQuery(jpql, TagModel.class);
         return query.getResultList();
+    }
+
+    @Query(value = "select tag from TagModel tag")
+    public Page<TagModel> findAll(Pageable pageable) {
+        return tagRepository.findAll(pageable);
     }
 
     @Override

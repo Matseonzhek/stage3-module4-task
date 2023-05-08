@@ -1,9 +1,13 @@
 package com.mjc.school.repository.implementation;
 
+import com.mjc.school.repository.AuthorPageRepository;
 import com.mjc.school.repository.BaseRepository;
 import com.mjc.school.repository.model.AuthorModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -19,12 +23,19 @@ public class AuthorRepository implements BaseRepository<AuthorModel, Long> {
     @Autowired
     @Qualifier(value = "tx")
     private final TransactionTemplate transactionTemplate;
-    EntityManager entityManager;
+    private final EntityManager entityManager;
+    private final AuthorPageRepository authorRepository;
 
     @Autowired
-    public AuthorRepository(EntityManager entityManager, TransactionTemplate transactionTemplate) {
+    public AuthorRepository(EntityManager entityManager, TransactionTemplate transactionTemplate, AuthorPageRepository authorRepository) {
         this.entityManager = entityManager;
         this.transactionTemplate = transactionTemplate;
+        this.authorRepository = authorRepository;
+    }
+
+    @Query(value = "select author from AuthorModel author")
+    public Page<AuthorModel> findAll(Pageable pageable) {
+        return authorRepository.findAll(pageable);
     }
 
     @Override
@@ -42,7 +53,7 @@ public class AuthorRepository implements BaseRepository<AuthorModel, Long> {
 
     @Override
     public AuthorModel create(AuthorModel entity) {
-        transactionTemplate.executeWithoutResult(pop->entityManager.persist(entity));
+        transactionTemplate.executeWithoutResult(pop -> entityManager.persist(entity));
 //        entityManager.persist(entity);
         return entity;
     }

@@ -13,6 +13,9 @@ public class CommentDtoRequest {
         this.newsModelId = newsModelId;
     }
 
+    public CommentDtoRequest() {
+    }
+
     public Long getId() {
         return id;
     }

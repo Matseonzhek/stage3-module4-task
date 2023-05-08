@@ -11,6 +11,9 @@ public class TagDtoRequest {
         this.name = name;
     }
 
+    public TagDtoRequest() {
+    }
+
     public Long getId() {
         return id;
     }

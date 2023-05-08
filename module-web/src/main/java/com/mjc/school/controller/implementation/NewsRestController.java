@@ -33,9 +33,9 @@ public class NewsRestController implements BaseRestController<NewsDtoRequest, Ne
     @GetMapping
     @Override
     public ResponseEntity<CollectionModel<NewsDtoResponse>> findAll(
-            @RequestParam int page,
-            @RequestParam int size,
-            @RequestParam String sortBy) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size,
+            @RequestParam(required = false, defaultValue = "title") String sortBy) {
         Sort sort = Sort.by(sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<NewsDtoResponse> newsDtoResponsePage = newsService.findAll(pageable);
@@ -64,7 +64,9 @@ public class NewsRestController implements BaseRestController<NewsDtoRequest, Ne
 
     @PutMapping(value = "/{id}", consumes = {"application/JSON"}, produces = {"application/JSON", "application/XML"})
     @Override
-    public ResponseEntity<NewsDtoResponse> update(@PathVariable Long id, NewsDtoRequest updateRequest) {
+    public ResponseEntity<NewsDtoResponse> update(
+            @PathVariable Long id,
+            @RequestBody NewsDtoRequest updateRequest) {
         NewsDtoResponse updatedNews = newsService.update(updateRequest);
         return new ResponseEntity<>(updatedNews, HttpStatus.OK);
     }

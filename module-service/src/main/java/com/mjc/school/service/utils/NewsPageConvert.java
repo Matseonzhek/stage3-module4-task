@@ -5,7 +5,7 @@ import com.mjc.school.service.dto.NewsDtoResponse;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
 
-public class PageConvert implements Converter<NewsModel, NewsDtoResponse> {
+public class NewsPageConvert implements Converter<NewsModel, NewsDtoResponse> {
     @Override
     public NewsDtoResponse convert(NewsModel source) {
         NewsDtoResponse newsDtoResponse = new NewsDtoResponse();
