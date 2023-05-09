@@ -89,6 +89,9 @@ public class CommentService implements BaseService<CommentDtoRequest, CommentDto
     @Override
     public boolean deleteById(Long id) {
         if (commentRepository.existById(id)) {
+            CommentModel commentModel = commentRepository.readById(id).get();
+            NewsModel newsModel = commentModel.getNewsModel();
+            newsModel.removeComment(commentModel);
             commentRepository.deleteById(id);
             return true;
         } else throw new NotFoundException(Constants.COMMENT_NOT_EXIST);

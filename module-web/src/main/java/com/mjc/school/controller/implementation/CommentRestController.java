@@ -62,13 +62,14 @@ public class CommentRestController implements BaseRestController<CommentDtoReque
     public ResponseEntity<CommentDtoResponse> update(
             @PathVariable Long id,
             @RequestBody CommentDtoRequest updateRequest) {
-        return new ResponseEntity<>(commentService.update(updateRequest),HttpStatus.OK);
+        return new ResponseEntity<>(commentService.update(updateRequest), HttpStatus.OK);
     }
 
 
     @DeleteMapping(value = "/{id}")
     @Override
     public ResponseEntity<Boolean> deleteById(@PathVariable Long id) {
-        return new ResponseEntity<>(commentService.deleteById(id), HttpStatus.NO_CONTENT);
+        boolean result = commentService.deleteById(id);
+        return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
     }
 }

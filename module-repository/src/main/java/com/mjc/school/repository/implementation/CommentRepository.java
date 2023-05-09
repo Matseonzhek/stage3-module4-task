@@ -72,7 +72,7 @@ public class CommentRepository implements BaseRepository<CommentModel, Long> {
 
     @Override
     public boolean existById(Long id) {
-        String jpql = " select count (comments.id)  from CommentModel comments where comments.id=?1";
+        String jpql = " select count (comments)  from CommentModel comments where comments.id=?1";
         Query query = entityManager.createQuery(jpql).setParameter(1, id);
         Long count = (Long) query.getSingleResult();
         return count > 0;

@@ -80,7 +80,10 @@ public class NewsRepository implements BaseRepository<NewsModel, Long> {
 
     @Override
     public boolean existById(Long id) {
-        return readById(id).isPresent();
+        String jpql = " select count (news)  from NewsModel news where news.id=?1";
+        javax.persistence.Query query = entityManager.createQuery(jpql).setParameter(1, id);
+        Long count = (Long) query.getSingleResult();
+        return count > 0;
     }
 
     public AuthorModel getAuthorByNewsId(Long id) {

@@ -25,7 +25,7 @@ public class CommentModel implements BaseEntity<Long> {
     @LastModifiedDate
     private LocalDateTime updatedDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private NewsModel newsModel;
 
     public CommentModel(Long id, String content, LocalDateTime createdDate, LocalDateTime updatedDate, NewsModel newsModel) {
