@@ -120,6 +120,13 @@ NewsService implements BaseService<NewsDtoRequest, NewsDtoResponse, Long>, PageS
     }
 
     @Transactional
+    public NewsDtoResponse patch(NewsDtoRequest newsDtoRequest) {
+        NewsModel newsModel = newsRepository.readById(newsDtoRequest.getId()).get();
+        newsDtoRequest.setAuthorId(newsModel.getAuthorModel().getId());
+        return update(newsDtoRequest);
+    }
+
+    @Transactional
     @Validate(value = "checkId")
     @Override
     public boolean deleteById(Long id) {

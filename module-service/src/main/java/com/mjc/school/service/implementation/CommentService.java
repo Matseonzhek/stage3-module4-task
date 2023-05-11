@@ -85,6 +85,14 @@ public class CommentService implements BaseService<CommentDtoRequest, CommentDto
     }
 
     @Transactional
+    public CommentDtoResponse patch(CommentDtoRequest commentDtoRequest){
+        CommentModel commentModel = commentRepository.readById(commentDtoRequest.getId()).get();
+        NewsModel newsModel = commentModel.getNewsModel();
+        commentDtoRequest.setNewsModelId(newsModel.getId());
+        return update(commentDtoRequest);
+    }
+
+    @Transactional
     @Validate(value = "checkId")
     @Override
     public boolean deleteById(Long id) {

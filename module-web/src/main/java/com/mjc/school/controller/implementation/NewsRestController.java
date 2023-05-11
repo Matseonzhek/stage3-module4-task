@@ -1,5 +1,10 @@
 package com.mjc.school.controller.implementation;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
 import com.mjc.school.controller.BaseRestController;
 import com.mjc.school.service.dto.NewsDtoRequest;
 import com.mjc.school.service.dto.NewsDtoResponse;
@@ -23,10 +28,12 @@ public class NewsRestController implements BaseRestController<NewsDtoRequest, Ne
 
 
     private final NewsService newsService;
+    private final ObjectMapper mapper;
 
 
-    public NewsRestController(NewsService newsService) {
+    public NewsRestController(NewsService newsService, ObjectMapper mapper) {
         this.newsService = newsService;
+        this.mapper = mapper;
     }
 
 
@@ -71,10 +78,30 @@ public class NewsRestController implements BaseRestController<NewsDtoRequest, Ne
         return new ResponseEntity<>(updatedNews, HttpStatus.OK);
     }
 
+    @PatchMapping(value = "/{id}", consumes = "application/json-patch+json")
+    @Override
+    public ResponseEntity<NewsDtoResponse> patch(
+            @PathVariable Long id,
+            @RequestBody JsonPatch patch) {
+        try {
+            NewsDtoResponse newsDtoResponse = newsService.readById(id);
+            NewsDtoRequest updatedNews = applyPatchAuthor(patch, newsDtoResponse);
+            NewsDtoResponse patchedNews = newsService.patch(updatedNews);
+            return new ResponseEntity<>(patchedNews, HttpStatus.OK);
+        } catch (JsonPatchException | JsonProcessingException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 
     @DeleteMapping(value = "/{id}")
     @Override
     public ResponseEntity<Boolean> deleteById(@PathVariable Long id) {
         return new ResponseEntity<>(newsService.deleteById(id), HttpStatus.NO_CONTENT);
+    }
+
+    private NewsDtoRequest applyPatchAuthor(JsonPatch patch, NewsDtoResponse newsDtoResponse) throws JsonPatchException, JsonProcessingException {
+        JsonNode patched = patch.apply(mapper.convertValue(newsDtoResponse, JsonNode.class));
+        return mapper.treeToValue(patched, NewsDtoRequest.class);
     }
 }

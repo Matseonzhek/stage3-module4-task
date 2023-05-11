@@ -1,5 +1,10 @@
 package com.mjc.school.controller.implementation;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
 import com.mjc.school.controller.BaseRestController;
 import com.mjc.school.service.dto.TagDtoRequest;
 import com.mjc.school.service.dto.TagDtoResponse;
@@ -22,9 +27,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 public class TagRestController implements BaseRestController<TagDtoRequest, TagDtoResponse, Long> {
 
     private final TagService tagService;
+    private final ObjectMapper mapper;
 
-    public TagRestController(TagService tagService) {
+    public TagRestController(TagService tagService, ObjectMapper mapper) {
         this.tagService = tagService;
+        this.mapper = mapper;
     }
 
     @GetMapping
@@ -68,9 +75,31 @@ public class TagRestController implements BaseRestController<TagDtoRequest, TagD
         return new ResponseEntity<>(tagDtoResponse, HttpStatus.OK);
     }
 
+    @PatchMapping(value = "/{id}", consumes = "application/json-patch+json")
+    @Override
+    public ResponseEntity<TagDtoResponse> patch(
+            @PathVariable Long id,
+            @RequestBody JsonPatch patch) {
+        try {
+            TagDtoResponse tagDtoResponse = tagService.readById(id);
+            TagDtoRequest tagDtoRequest = applyPatchAuthor(patch, tagDtoResponse);
+            TagDtoResponse tagPatched = tagService.update(tagDtoRequest);
+            return new ResponseEntity<>(tagPatched, HttpStatus.OK);
+        } catch (JsonPatchException | JsonProcessingException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+    }
+
+
     @DeleteMapping(value = "/{id}")
     @Override
     public ResponseEntity<Boolean> deleteById(@PathVariable Long id) {
         return new ResponseEntity<>(tagService.deleteById(id), HttpStatus.NO_CONTENT);
+    }
+
+    private TagDtoRequest applyPatchAuthor(JsonPatch patch, TagDtoResponse tagDtoResponse) throws JsonPatchException, JsonProcessingException {
+        JsonNode patched = patch.apply(mapper.convertValue(tagDtoResponse, JsonNode.class));
+        return mapper.treeToValue(patched, TagDtoRequest.class);
     }
 }

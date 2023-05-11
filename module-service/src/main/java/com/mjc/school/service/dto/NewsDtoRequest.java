@@ -1,9 +1,10 @@
 package com.mjc.school.service.dto;
 
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.stereotype.Component;
 
 @Component
-public class NewsDtoRequest {
+public class NewsDtoRequest extends RepresentationModel<NewsDtoRequest> {
 
     private Long id;
     private String title;

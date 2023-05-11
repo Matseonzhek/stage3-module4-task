@@ -5,13 +5,14 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "comments")
-public class CommentModel implements BaseEntity<Long> {
+public class CommentModel implements BaseEntity<Long>, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -98,7 +99,7 @@ public class CommentModel implements BaseEntity<Long> {
     public String toString() {
         return "CommentModel{" +
                 "id=" + id +
-                ", content='" + content + '\'' +
+                ", content='" + content +
                 ", createdDate=" + createdDate +
                 ", updatedDate=" + updatedDate +
                 ", newsModel=" + newsModel +

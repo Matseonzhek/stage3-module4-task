@@ -1,5 +1,6 @@
 package com.mjc.school.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.time.LocalDateTime;
@@ -8,7 +9,9 @@ import java.util.Objects;
 public class CommentDtoResponse extends RepresentationModel<CommentDtoResponse> {
     private Long id;
     private String content;
+    @JsonIgnore
     private LocalDateTime createdDate;
+    @JsonIgnore
     private LocalDateTime updatedDate;
 
     public CommentDtoResponse(Long id, String content, LocalDateTime createdDate, LocalDateTime updatedDate) {

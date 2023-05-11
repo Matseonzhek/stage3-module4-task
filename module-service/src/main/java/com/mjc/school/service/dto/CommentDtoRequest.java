@@ -1,8 +1,10 @@
 package com.mjc.school.service.dto;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import java.util.Objects;
 
-public class CommentDtoRequest {
+public class CommentDtoRequest extends RepresentationModel<CommentDtoRequest> {
     private Long id;
     private String content;
     private Long newsModelId;

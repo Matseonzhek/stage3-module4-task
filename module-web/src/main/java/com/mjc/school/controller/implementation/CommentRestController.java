@@ -1,5 +1,10 @@
 package com.mjc.school.controller.implementation;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
 import com.mjc.school.controller.BaseRestController;
 import com.mjc.school.service.dto.CommentDtoRequest;
 import com.mjc.school.service.dto.CommentDtoResponse;
@@ -22,9 +27,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 public class CommentRestController implements BaseRestController<CommentDtoRequest, CommentDtoResponse, Long> {
 
     private final CommentService commentService;
+    private final ObjectMapper mapper;
 
-    public CommentRestController(CommentService commentService) {
+    public CommentRestController(CommentService commentService, ObjectMapper mapper) {
         this.commentService = commentService;
+        this.mapper = mapper;
     }
 
     @GetMapping
@@ -65,11 +72,31 @@ public class CommentRestController implements BaseRestController<CommentDtoReque
         return new ResponseEntity<>(commentService.update(updateRequest), HttpStatus.OK);
     }
 
+    @PatchMapping(value = "/{id}", consumes = "application/json-patch+json")
+    @Override
+    public ResponseEntity<CommentDtoResponse> patch(
+            @PathVariable Long id,
+            @RequestBody JsonPatch patch) {
+        try {
+            CommentDtoResponse commentDtoResponse = commentService.readById(id);
+            CommentDtoRequest updatedComment = applyPatchAuthor(patch, commentDtoResponse);
+            CommentDtoResponse commentPatched = commentService.patch(updatedComment);
+            return new ResponseEntity<>(commentPatched, HttpStatus.OK);
+        } catch (JsonPatchException | JsonProcessingException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 
     @DeleteMapping(value = "/{id}")
     @Override
     public ResponseEntity<Boolean> deleteById(@PathVariable Long id) {
         boolean result = commentService.deleteById(id);
         return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
+    }
+
+    private CommentDtoRequest applyPatchAuthor(JsonPatch patch, CommentDtoResponse commentDtoResponse) throws JsonPatchException, JsonProcessingException {
+        JsonNode patched = patch.apply(mapper.convertValue(commentDtoResponse, JsonNode.class));
+        return mapper.treeToValue(patched, CommentDtoRequest.class);
     }
 }
