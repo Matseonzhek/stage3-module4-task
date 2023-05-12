@@ -20,6 +20,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+
+import static com.mjc.school.controller.constants.Constants.ID_NOT_NULL;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
@@ -53,7 +57,8 @@ public class TagRestController implements BaseRestController<TagDtoRequest, TagD
 
     @GetMapping(value = "/{id}")
     @Override
-    public ResponseEntity<TagDtoResponse> readById(@PathVariable Long id) {
+    public ResponseEntity<TagDtoResponse> readById(
+            @PathVariable @NotBlank(message = ID_NOT_NULL) Long id) {
         TagDtoResponse tagDtoResponse = tagService.readById(id);
         return new ResponseEntity<>(tagDtoResponse, HttpStatus.OK);
     }
@@ -61,7 +66,7 @@ public class TagRestController implements BaseRestController<TagDtoRequest, TagD
     @PostMapping(consumes = {"application/JSON"}, produces = {"application/JSON", "application/XML"})
     @Override
     public ResponseEntity<TagDtoResponse> create(
-            @RequestBody TagDtoRequest createRequest) {
+            @RequestBody @Valid TagDtoRequest createRequest) {
         TagDtoResponse tagDtoResponse = tagService.create(createRequest);
         return new ResponseEntity<>(tagDtoResponse, HttpStatus.CREATED);
     }
@@ -69,8 +74,8 @@ public class TagRestController implements BaseRestController<TagDtoRequest, TagD
     @PutMapping(value = "/{id}")
     @Override
     public ResponseEntity<TagDtoResponse> update(
-            @PathVariable Long id,
-            @RequestBody TagDtoRequest updateRequest) {
+            @PathVariable @NotBlank(message = ID_NOT_NULL) Long id,
+            @RequestBody @Valid TagDtoRequest updateRequest) {
         TagDtoResponse tagDtoResponse = tagService.update(updateRequest);
         return new ResponseEntity<>(tagDtoResponse, HttpStatus.OK);
     }
@@ -78,7 +83,7 @@ public class TagRestController implements BaseRestController<TagDtoRequest, TagD
     @PatchMapping(value = "/{id}", consumes = "application/json-patch+json")
     @Override
     public ResponseEntity<TagDtoResponse> patch(
-            @PathVariable Long id,
+            @PathVariable @NotBlank(message = ID_NOT_NULL) Long id,
             @RequestBody JsonPatch patch) {
         try {
             TagDtoResponse tagDtoResponse = tagService.readById(id);
@@ -94,7 +99,8 @@ public class TagRestController implements BaseRestController<TagDtoRequest, TagD
 
     @DeleteMapping(value = "/{id}")
     @Override
-    public ResponseEntity<Boolean> deleteById(@PathVariable Long id) {
+    public ResponseEntity<Boolean> deleteById(
+            @PathVariable @NotBlank(message = ID_NOT_NULL) Long id) {
         return new ResponseEntity<>(tagService.deleteById(id), HttpStatus.NO_CONTENT);
     }
 

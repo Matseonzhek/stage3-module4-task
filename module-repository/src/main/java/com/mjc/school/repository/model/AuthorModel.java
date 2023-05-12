@@ -1,5 +1,6 @@
 package com.mjc.school.repository.model;
 
+import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -8,6 +9,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+
+import static com.mjc.school.repository.constants.Constants.*;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -20,6 +23,7 @@ public class AuthorModel implements BaseEntity<Long> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "name")
+    @Length(min = AUTHOR_NAME_MIN, max = AUTHOR_NAME_MAX, message = AUTHOR_NAME_CONSTRAINTS )
     private String name;
     @Column(name = "createdDate", nullable = false, updatable = false)
     @CreatedDate

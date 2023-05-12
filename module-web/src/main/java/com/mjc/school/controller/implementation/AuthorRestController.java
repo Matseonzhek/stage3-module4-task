@@ -18,16 +18,22 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+
+import static com.mjc.school.controller.constants.Constants.ID_NOT_NULL;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 @RequestMapping(value = "authors")
+@Validated
 public class AuthorRestController implements BaseRestController<AuthorDtoRequest, AuthorDtoResponse, Long> {
 
     private final AuthorService authorService;
-    private final  ObjectMapper mapper;
+    private final ObjectMapper mapper;
 
 
     public AuthorRestController(AuthorService authorService, ObjectMapper mapper) {
@@ -55,14 +61,15 @@ public class AuthorRestController implements BaseRestController<AuthorDtoRequest
 
     @GetMapping(value = "/{id}")
     @Override
-    public ResponseEntity<AuthorDtoResponse> readById(@PathVariable Long id) {
+    public ResponseEntity<AuthorDtoResponse> readById(@PathVariable @NotBlank(message = ID_NOT_NULL)Long id) {
         AuthorDtoResponse authorDtoResponse = authorService.readById(id);
         return new ResponseEntity<>(authorDtoResponse, HttpStatus.OK);
     }
 
     @PostMapping(consumes = "application/json", produces = {"application/json", "application/xml"})
     @Override
-    public ResponseEntity<AuthorDtoResponse> create(@RequestBody AuthorDtoRequest createRequest) {
+    public ResponseEntity<AuthorDtoResponse> create(
+            @RequestBody @Valid AuthorDtoRequest createRequest) {
         AuthorDtoResponse authorDtoResponse = authorService.create(createRequest);
         return new ResponseEntity<>(authorDtoResponse, HttpStatus.CREATED);
     }
@@ -70,15 +77,15 @@ public class AuthorRestController implements BaseRestController<AuthorDtoRequest
     @PutMapping(value = "/{id}", consumes = "application/json", produces = {"application/json", "application/xml"})
     @Override
     public ResponseEntity<AuthorDtoResponse> update(
-            @PathVariable Long id,
-            @RequestBody AuthorDtoRequest updateRequest) {
+            @PathVariable @NotBlank(message = ID_NOT_NULL) Long id,
+            @RequestBody @Valid AuthorDtoRequest updateRequest) {
         AuthorDtoResponse authorDtoResponse = authorService.update(updateRequest);
         return new ResponseEntity<>(authorDtoResponse, HttpStatus.OK);
     }
 
     @PatchMapping(value = "/{id}", consumes = "application/json-patch+json")
     public ResponseEntity<AuthorDtoResponse> patch(
-            @PathVariable Long id,
+            @PathVariable  Long id,
             @RequestBody JsonPatch patch) {
         try {
             AuthorDtoResponse authorDtoResponse = authorService.readById(id);
@@ -92,7 +99,8 @@ public class AuthorRestController implements BaseRestController<AuthorDtoRequest
 
     @DeleteMapping(value = "/{id}")
     @Override
-    public ResponseEntity<Boolean> deleteById(@PathVariable Long id) {
+    public ResponseEntity<Boolean> deleteById(
+            @PathVariable @NotBlank(message = ID_NOT_NULL) Long id) {
         return new ResponseEntity<>(authorService.deleteById(id), HttpStatus.NO_CONTENT);
     }
 

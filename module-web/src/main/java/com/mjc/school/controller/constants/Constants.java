@@ -21,6 +21,8 @@ public class Constants {
 
     public static String WRONG_NUMBER_OF_OPERATION = "Operation not found";
 
+    public final static String ID_NOT_NULL = "ID can not be blank";
+
     private Constants() {
     }
 }

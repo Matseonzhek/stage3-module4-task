@@ -1,9 +1,13 @@
 package com.mjc.school.repository.model;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static com.mjc.school.repository.constants.Constants.*;
 
 @Entity
 @Table(name = "tag")
@@ -13,6 +17,7 @@ public class TagModel implements BaseEntity<Long> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
+    @Length(min = TAG_NAME_MIN, max = TAG_NAME_MAX, message = TAG_NAME_CONSTRAINTS)
     private String name;
 
     @ManyToMany(mappedBy = "taggedNews", fetch = FetchType.LAZY)
