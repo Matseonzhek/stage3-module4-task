@@ -7,7 +7,6 @@ import com.mjc.school.repository.model.NewsModel;
 import com.mjc.school.service.BaseService;
 import com.mjc.school.service.PageService;
 import com.mjc.school.service.annotation.Validate;
-import com.mjc.school.service.constants.Constants;
 import com.mjc.school.service.dto.CommentDtoRequest;
 import com.mjc.school.service.dto.CommentDtoResponse;
 import com.mjc.school.service.exception.NotFoundException;
@@ -20,6 +19,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+
+import static com.mjc.school.service.exception.ServiceErrorCode.COMMENT_ID_DOES_NOT_EXIST;
+import static com.mjc.school.service.exception.ServiceErrorCode.NEWS_ID_DOES_NOT_EXIST;
 
 @Service
 public class CommentService implements BaseService<CommentDtoRequest, CommentDtoResponse, Long>, PageService<CommentDtoRequest, CommentDtoResponse, Long> {
@@ -50,7 +52,7 @@ public class CommentService implements BaseService<CommentDtoRequest, CommentDto
         if (commentRepository.existById(id)) {
             CommentModel commentModel = commentRepository.readById(id).get();
             return CommentMapper.INSTANCE.commentToCommentDtoResponse(commentModel);
-        } else throw new NotFoundException(Constants.COMMENT_NOT_EXIST);
+        } else throw new NotFoundException(String.format(COMMENT_ID_DOES_NOT_EXIST.getMessage(), id));
     }
 
     @Transactional
@@ -65,7 +67,8 @@ public class CommentService implements BaseService<CommentDtoRequest, CommentDto
             CommentModel createdCommentModel = commentRepository.create(commentModel);
             newsModel.addComment(createdCommentModel);
             return CommentMapper.INSTANCE.commentToCommentDtoResponse(createdCommentModel);
-        } else throw new NotFoundException(Constants.NEWS_NOT_EXIST);
+        } else
+            throw new NotFoundException(String.format(NEWS_ID_DOES_NOT_EXIST.getMessage(), createRequest.getNewsModelId()));
     }
 
     @Transactional
@@ -80,12 +83,14 @@ public class CommentService implements BaseService<CommentDtoRequest, CommentDto
                 commentModel.setNewsModel(newsModel);
                 CommentModel updatedCommentModel = commentRepository.update(commentModel);
                 return CommentMapper.INSTANCE.commentToCommentDtoResponse(updatedCommentModel);
-            } else throw new NotFoundException(Constants.COMMENT_NOT_EXIST);
-        } else throw new NotFoundException(Constants.NEWS_NOT_EXIST);
+            } else
+                throw new NotFoundException(String.format(COMMENT_ID_DOES_NOT_EXIST.getMessage(), updateRequest.getId()));
+        } else
+            throw new NotFoundException(String.format(NEWS_ID_DOES_NOT_EXIST.getMessage(), updateRequest.getNewsModelId()));
     }
 
     @Transactional
-    public CommentDtoResponse patch(CommentDtoRequest commentDtoRequest){
+    public CommentDtoResponse patch(CommentDtoRequest commentDtoRequest) {
         CommentModel commentModel = commentRepository.readById(commentDtoRequest.getId()).get();
         NewsModel newsModel = commentModel.getNewsModel();
         commentDtoRequest.setNewsModelId(newsModel.getId());
@@ -102,6 +107,6 @@ public class CommentService implements BaseService<CommentDtoRequest, CommentDto
             newsModel.removeComment(commentModel);
             commentRepository.deleteById(id);
             return true;
-        } else throw new NotFoundException(Constants.COMMENT_NOT_EXIST);
+        } else throw new NotFoundException(String.format(COMMENT_ID_DOES_NOT_EXIST.getMessage(), id));
     }
 }

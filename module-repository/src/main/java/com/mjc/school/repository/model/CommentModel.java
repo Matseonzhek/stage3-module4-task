@@ -1,6 +1,5 @@
 package com.mjc.school.repository.model;
 
-import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -9,8 +8,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
-
-import static com.mjc.school.repository.constants.Constants.*;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -21,7 +18,6 @@ public class CommentModel implements BaseEntity<Long>, Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
-    @Length(min = COMMENT_CONTENT_MIN, max = COMMENT_CONTENT_MAX, message = COMMENT_CONTENT_CONSTRAINTS)
     private String content;
     @Column(nullable = false, updatable = false)
     @CreatedDate

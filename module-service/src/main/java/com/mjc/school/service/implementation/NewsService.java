@@ -30,7 +30,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static com.mjc.school.service.constants.Constants.*;
+import static com.mjc.school.service.exception.ServiceErrorCode.*;
 
 @Service
 public class
@@ -68,7 +68,7 @@ NewsService implements BaseService<NewsDtoRequest, NewsDtoResponse, Long>, PageS
             Optional<NewsModel> optionalNewsModel = newsRepository.readById(id);
             return NewsMapper.INSTANCE.newsToNewsDtoResponse(optionalNewsModel.get());
         } else {
-            throw new NotFoundException(NEWS_NOT_EXIST);
+            throw new NotFoundException(String.format(NEWS_ID_DOES_NOT_EXIST.getMessage(), id));
         }
     }
 
@@ -82,13 +82,14 @@ NewsService implements BaseService<NewsDtoRequest, NewsDtoResponse, Long>, PageS
                 TagModel tagModel = tagRepository.readById(createRequest.getTagId()).get();
                 newsModel.addTag(tagModel);
             } else {
-                throw new NotFoundException(TAG_NOT_EXIST);
+                throw new NotFoundException(String.format(TAG_ID_DOES_NOT_EXIST.getMessage(), createRequest.getTagId()));
             }
             AuthorModel authorModel = authorRepository.readById(createRequest.getAuthorId()).get();
             newsModel.setAuthorModel(authorModel);
             NewsModel createdNewsModel = newsRepository.create(newsModel);
             return NewsMapper.INSTANCE.newsToNewsDtoResponse(createdNewsModel);
-        } else throw new NotFoundException(AUTHOR_NOT_EXIST);
+        } else
+            throw new NotFoundException(String.format(AUTHOR_ID_DOES_NOT_EXIST.getMessage(), createRequest.getAuthorId()));
 
     }
 
@@ -113,9 +114,10 @@ NewsService implements BaseService<NewsDtoRequest, NewsDtoResponse, Long>, PageS
                 }
                 NewsModel updatedNewsModel = newsRepository.update(newsModel);
                 return NewsMapper.INSTANCE.newsToNewsDtoResponse(updatedNewsModel);
-            } else throw new NotFoundException(AUTHOR_NOT_EXIST);
+            } else
+                throw new NotFoundException(String.format(AUTHOR_ID_DOES_NOT_EXIST.getMessage(), updateRequest.getAuthorId()));
         } else {
-            throw new NotFoundException(NEWS_NOT_EXIST);
+            throw new NotFoundException(String.format(NEWS_ID_DOES_NOT_EXIST.getMessage(), updateRequest.getId()));
         }
     }
 
@@ -134,7 +136,7 @@ NewsService implements BaseService<NewsDtoRequest, NewsDtoResponse, Long>, PageS
             newsRepository.deleteById(id);
             return true;
         } else {
-            throw new NotFoundException(NEWS_NOT_EXIST);
+            throw new NotFoundException(String.format(NEWS_ID_DOES_NOT_EXIST.getMessage(), id));
         }
     }
 
@@ -142,13 +144,13 @@ NewsService implements BaseService<NewsDtoRequest, NewsDtoResponse, Long>, PageS
     public AuthorDtoResponse getAuthorByNewsId(Long id) {
         if (newsRepository.existById(id)) {
             return AuthorMapper.INSTANCE.authorModelToAuthorDtoResponse(newsRepository.getAuthorByNewsId(id));
-        } else throw new NotFoundException(NEWS_NOT_EXIST);
+        } else throw new NotFoundException(String.format(NEWS_ID_DOES_NOT_EXIST.getMessage(), id));
     }
 
     public List<TagDtoResponse> getTagByNewsId(Long id) {
         if (newsRepository.existById(id)) {
             return TagMapper.INSTANCE.listTagToTagDtoResponse(newsRepository.getTagByNewsId(id));
-        } else throw new NotFoundException(NEWS_NOT_EXIST);
+        } else throw new NotFoundException(String.format(NEWS_ID_DOES_NOT_EXIST.getMessage(), id));
     }
 
     public List<NewsDtoResponse> getNewsByOption(String tagName, Long tagId, String authorName, String title, String content) {

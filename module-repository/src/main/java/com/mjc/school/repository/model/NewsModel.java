@@ -1,6 +1,5 @@
 package com.mjc.school.repository.model;
 
-import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -12,8 +11,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import static com.mjc.school.repository.constants.Constants.*;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -36,10 +33,8 @@ public class NewsModel implements BaseEntity<Long>, Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "title")
-    @Length(min = NEWS_TITLE_MIN, max = NEWS_TITLE_MAX, message = NEWS_TITLE_CONSTRAINTS)
     private String title;
     @Column(name = "content")
-    @Length(min = NEWS_CONTENT_MIN, max = NEWS_CONTENT_MAX, message = NEWS_CONTENT_CONSTRAINTS)
     private String content;
     @Column(name = "createdDate", nullable = false, updatable = false)
     @CreatedDate

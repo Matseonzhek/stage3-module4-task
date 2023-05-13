@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.mjc.school.controller.BaseRestController;
-import com.mjc.school.controller.constants.Constants;
 import com.mjc.school.service.dto.CommentDtoRequest;
 import com.mjc.school.service.dto.CommentDtoResponse;
 import com.mjc.school.service.implementation.CommentService;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
-import static com.mjc.school.controller.constants.Constants.ID_NOT_NULL;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
@@ -60,7 +58,7 @@ public class CommentRestController implements BaseRestController<CommentDtoReque
     @GetMapping(value = "/{id}")
     @Override
     public ResponseEntity<CommentDtoResponse> readById(
-            @PathVariable @NotBlank(message = ID_NOT_NULL) Long id) {
+            @PathVariable @NotBlank Long id) {
         return new ResponseEntity<>(commentService.readById(id), HttpStatus.OK);
     }
 
@@ -74,7 +72,7 @@ public class CommentRestController implements BaseRestController<CommentDtoReque
     @PutMapping(value = "/{id}", consumes = {"application/JSON"}, produces = {"application/JSON", "application/XML"})
     @Override
     public ResponseEntity<CommentDtoResponse> update(
-            @PathVariable @NotBlank(message = ID_NOT_NULL) Long id,
+            @PathVariable @NotBlank Long id,
             @RequestBody @Valid CommentDtoRequest updateRequest) {
         return new ResponseEntity<>(commentService.update(updateRequest), HttpStatus.OK);
     }
@@ -82,7 +80,7 @@ public class CommentRestController implements BaseRestController<CommentDtoReque
     @PatchMapping(value = "/{id}", consumes = "application/json-patch+json")
     @Override
     public ResponseEntity<CommentDtoResponse> patch(
-            @PathVariable @NotBlank(message = ID_NOT_NULL)  Long id,
+            @PathVariable @NotBlank Long id,
             @RequestBody JsonPatch patch) {
         try {
             CommentDtoResponse commentDtoResponse = commentService.readById(id);
@@ -98,7 +96,7 @@ public class CommentRestController implements BaseRestController<CommentDtoReque
     @DeleteMapping(value = "/{id}")
     @Override
     public ResponseEntity<Boolean> deleteById(
-            @PathVariable @NotBlank(message = ID_NOT_NULL)  Long id) {
+            @PathVariable @NotBlank Long id) {
         boolean result = commentService.deleteById(id);
         return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
     }

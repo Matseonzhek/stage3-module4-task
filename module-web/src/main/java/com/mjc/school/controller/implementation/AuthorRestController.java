@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
-import static com.mjc.school.controller.constants.Constants.ID_NOT_NULL;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
@@ -61,7 +60,7 @@ public class AuthorRestController implements BaseRestController<AuthorDtoRequest
 
     @GetMapping(value = "/{id}")
     @Override
-    public ResponseEntity<AuthorDtoResponse> readById(@PathVariable @NotBlank(message = ID_NOT_NULL)Long id) {
+    public ResponseEntity<AuthorDtoResponse> readById(@PathVariable @NotBlank Long id) {
         AuthorDtoResponse authorDtoResponse = authorService.readById(id);
         return new ResponseEntity<>(authorDtoResponse, HttpStatus.OK);
     }
@@ -77,7 +76,7 @@ public class AuthorRestController implements BaseRestController<AuthorDtoRequest
     @PutMapping(value = "/{id}", consumes = "application/json", produces = {"application/json", "application/xml"})
     @Override
     public ResponseEntity<AuthorDtoResponse> update(
-            @PathVariable @NotBlank(message = ID_NOT_NULL) Long id,
+            @PathVariable @NotBlank Long id,
             @RequestBody @Valid AuthorDtoRequest updateRequest) {
         AuthorDtoResponse authorDtoResponse = authorService.update(updateRequest);
         return new ResponseEntity<>(authorDtoResponse, HttpStatus.OK);
@@ -100,7 +99,7 @@ public class AuthorRestController implements BaseRestController<AuthorDtoRequest
     @DeleteMapping(value = "/{id}")
     @Override
     public ResponseEntity<Boolean> deleteById(
-            @PathVariable @NotBlank(message = ID_NOT_NULL) Long id) {
+            @PathVariable @NotBlank Long id) {
         return new ResponseEntity<>(authorService.deleteById(id), HttpStatus.NO_CONTENT);
     }
 

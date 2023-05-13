@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
-import static com.mjc.school.service.constants.Constants.TAG_NOT_EXIST;
+import static com.mjc.school.service.exception.ServiceErrorCode.TAG_ID_DOES_NOT_EXIST;
 
 @Service
 public class TagService implements BaseService<TagDtoRequest, TagDtoResponse, Long>, PageService<TagDtoRequest, TagDtoResponse, Long> {
@@ -46,7 +46,7 @@ public class TagService implements BaseService<TagDtoRequest, TagDtoResponse, Lo
     public TagDtoResponse readById(Long id) {
         if (tagRepository.existById(id)) {
             return TagMapper.INSTANCE.tagToTagDtoResponse(tagRepository.readById(id).get());
-        } else throw new NotFoundException(TAG_NOT_EXIST);
+        } else throw new NotFoundException(String.format(TAG_ID_DOES_NOT_EXIST.getMessage(), id));
     }
 
     @Validate(value = "checkTag")
@@ -65,7 +65,7 @@ public class TagService implements BaseService<TagDtoRequest, TagDtoResponse, Lo
             tagModel.setName(updateRequest.getName());
             TagModel updatedTagModel = tagRepository.update(tagModel);
             return TagMapper.INSTANCE.tagToTagDtoResponse(updatedTagModel);
-        } else throw new NotFoundException(TAG_NOT_EXIST);
+        } else throw new NotFoundException(String.format(TAG_ID_DOES_NOT_EXIST.getMessage(), updateRequest.getId()));
     }
 
     @Validate(value = "checkId")
@@ -75,6 +75,6 @@ public class TagService implements BaseService<TagDtoRequest, TagDtoResponse, Lo
         if (tagRepository.existById(id)) {
             tagRepository.deleteById(id);
             return true;
-        } else throw new NotFoundException(TAG_NOT_EXIST);
+        } else throw new NotFoundException(String.format(TAG_ID_DOES_NOT_EXIST.getMessage(), id));
     }
 }

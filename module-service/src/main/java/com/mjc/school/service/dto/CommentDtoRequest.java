@@ -2,10 +2,19 @@ package com.mjc.school.service.dto;
 
 import org.springframework.hateoas.RepresentationModel;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 public class CommentDtoRequest extends RepresentationModel<CommentDtoRequest> {
+
+    @Min(1)
+    @Max((Long.MAX_VALUE))
     private Long id;
+    @Size(min = 5, max = 255)
+    @NotNull
     private String content;
     private Long newsModelId;
 

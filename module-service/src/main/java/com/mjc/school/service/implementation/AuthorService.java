@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
-import static com.mjc.school.service.constants.Constants.AUTHOR_NOT_EXIST;
+import static com.mjc.school.service.exception.ServiceErrorCode.AUTHOR_ID_DOES_NOT_EXIST;
 
 @Service(value = "authorService")
 public class AuthorService implements BaseService<AuthorDtoRequest, AuthorDtoResponse, Long>, PageService<AuthorDtoRequest, AuthorDtoResponse, Long> {
@@ -47,7 +47,7 @@ public class AuthorService implements BaseService<AuthorDtoRequest, AuthorDtoRes
         if (authorRepository.existById(id)) {
             return AuthorMapper.INSTANCE.authorModelToAuthorDtoResponse(authorRepository.readById(id).get());
         } else {
-            throw new NotFoundException(AUTHOR_NOT_EXIST);
+            throw new NotFoundException(String.format(AUTHOR_ID_DOES_NOT_EXIST.getMessage(), id));
         }
     }
 
@@ -69,7 +69,7 @@ public class AuthorService implements BaseService<AuthorDtoRequest, AuthorDtoRes
             authorModel.setName(updateRequest.getName());
             return AuthorMapper.INSTANCE.authorModelToAuthorDtoResponse(authorRepository.update(authorModel));
         } else {
-            throw new NotFoundException(AUTHOR_NOT_EXIST);
+            throw new NotFoundException(String.format(AUTHOR_ID_DOES_NOT_EXIST.getMessage(), updateRequest.getId()));
         }
     }
 
@@ -81,7 +81,7 @@ public class AuthorService implements BaseService<AuthorDtoRequest, AuthorDtoRes
             authorRepository.deleteById(id);
             return true;
         } else {
-            throw new NotFoundException(AUTHOR_NOT_EXIST);
+            throw new NotFoundException(String.format(AUTHOR_ID_DOES_NOT_EXIST.getMessage(), id));
         }
 
     }

@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
-import static com.mjc.school.controller.constants.Constants.ID_NOT_NULL;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
@@ -62,7 +61,7 @@ public class NewsRestController implements BaseRestController<NewsDtoRequest, Ne
     @GetMapping(value = "{id}")
     @Override
     public ResponseEntity<NewsDtoResponse> readById(
-            @PathVariable @NotBlank(message = ID_NOT_NULL) Long id) {
+            @PathVariable @NotBlank Long id) {
         NewsDtoResponse newsDtoResponse = newsService.readById(id);
         return new ResponseEntity<>(newsDtoResponse, HttpStatus.OK);
     }
@@ -77,7 +76,7 @@ public class NewsRestController implements BaseRestController<NewsDtoRequest, Ne
     @PutMapping(value = "/{id}", consumes = {"application/JSON"}, produces = {"application/JSON", "application/XML"})
     @Override
     public ResponseEntity<NewsDtoResponse> update(
-            @PathVariable @NotBlank(message = ID_NOT_NULL) Long id,
+            @PathVariable @NotBlank Long id,
             @RequestBody @Valid NewsDtoRequest updateRequest) {
         NewsDtoResponse updatedNews = newsService.update(updateRequest);
         return new ResponseEntity<>(updatedNews, HttpStatus.OK);
@@ -86,7 +85,7 @@ public class NewsRestController implements BaseRestController<NewsDtoRequest, Ne
     @PatchMapping(value = "/{id}", consumes = "application/json-patch+json")
     @Override
     public ResponseEntity<NewsDtoResponse> patch(
-            @PathVariable @NotBlank(message = ID_NOT_NULL) Long id,
+            @PathVariable @NotBlank Long id,
             @RequestBody JsonPatch patch) {
         try {
             NewsDtoResponse newsDtoResponse = newsService.readById(id);
@@ -102,7 +101,7 @@ public class NewsRestController implements BaseRestController<NewsDtoRequest, Ne
     @DeleteMapping(value = "/{id}")
     @Override
     public ResponseEntity<Boolean> deleteById(
-            @PathVariable @NotBlank(message = ID_NOT_NULL) Long id) {
+            @PathVariable @NotBlank Long id) {
         return new ResponseEntity<>(newsService.deleteById(id), HttpStatus.NO_CONTENT);
     }
 

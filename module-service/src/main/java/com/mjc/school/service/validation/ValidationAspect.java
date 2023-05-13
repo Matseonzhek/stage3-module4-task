@@ -13,6 +13,8 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
 import static com.mjc.school.service.constants.Constants.*;
+import static com.mjc.school.service.exception.ServiceErrorCode.NUMBER_VALIDATION;
+import static com.mjc.school.service.exception.ServiceErrorCode.STRING_VALIDATION;
 
 
 @Aspect
@@ -79,16 +81,16 @@ public class ValidationAspect {
 
     void validateString(String value, String parameter, int minNumber, int maxNumber) {
         if (value == null) {
-            throw new ValidationException(ERROR_VALUE_STRING + "(" + parameter + ")");
+            throw new ValidationException(String.format(STRING_VALIDATION.getMessage(), value, parameter));
         }
         if (value.trim().length() < minNumber || value.trim().length() > maxNumber) {
-            throw new ValidationException(ERROR_VALUE_STRING + "(" + parameter + ": " + value + ")");
+            throw new ValidationException(String.format(STRING_VALIDATION.getMessage(), value, parameter));
         }
     }
 
     private void validateNumber(Long id, String parameter) {
         if (id == null || id < 1) {
-            throw new ValidationException(ERROR_VALUE_NUMBER + "(" + parameter + ": " + id + ")");
+            throw new ValidationException(String.format(NUMBER_VALIDATION.getMessage(), id, parameter));
         }
     }
 
