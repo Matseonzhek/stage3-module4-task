@@ -65,7 +65,8 @@ public class AuthorController implements BaseRestController<AuthorDtoRequest, Au
         return new ResponseEntity<>(authorDtoResponse, HttpStatus.OK);
     }
 
-    @PostMapping(consumes = "application/json", produces = {"application/json", "application/xml"})
+    @PostMapping(value = "/create", consumes = "application/json", produces = {"application/json", "application/xml"})
+    @ResponseStatus(HttpStatus.CREATED)
     @Override
     public ResponseEntity<AuthorDtoResponse> create(
             @RequestBody @Valid AuthorDtoRequest createRequest) {
@@ -84,7 +85,7 @@ public class AuthorController implements BaseRestController<AuthorDtoRequest, Au
 
     @PatchMapping(value = "/{id}", consumes = "application/json-patch+json")
     public ResponseEntity<AuthorDtoResponse> patch(
-            @PathVariable  Long id,
+            @PathVariable Long id,
             @RequestBody JsonPatch patch) {
         try {
             AuthorDtoResponse authorDtoResponse = authorService.readById(id);
@@ -98,9 +99,10 @@ public class AuthorController implements BaseRestController<AuthorDtoRequest, Au
 
     @DeleteMapping(value = "/{id}")
     @Override
-    public ResponseEntity<Boolean> deleteById(
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteById(
             @PathVariable @NotBlank Long id) {
-        return new ResponseEntity<>(authorService.deleteById(id), HttpStatus.NO_CONTENT);
+        authorService.deleteById(id);
     }
 
     private AuthorDtoRequest applyPatchAuthor(JsonPatch patch, AuthorDtoResponse authorDtoResponse) throws JsonPatchException, JsonProcessingException {

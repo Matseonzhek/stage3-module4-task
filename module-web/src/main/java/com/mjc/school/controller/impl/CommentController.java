@@ -62,7 +62,8 @@ public class CommentController implements BaseRestController<CommentDtoRequest, 
         return new ResponseEntity<>(commentService.readById(id), HttpStatus.OK);
     }
 
-    @PostMapping(consumes = {"application/JSON"}, produces = {"application/JSON", "application/XML"})
+    @PostMapping(value = "/create", consumes = "application/json", produces = {"application/json", "application/xml"})
+    @ResponseStatus(HttpStatus.CREATED)
     @Override
     public ResponseEntity<CommentDtoResponse> create(@RequestBody @Valid CommentDtoRequest createRequest) {
         CommentDtoResponse commentDtoResponse = commentService.create(createRequest);
@@ -95,10 +96,10 @@ public class CommentController implements BaseRestController<CommentDtoRequest, 
 
     @DeleteMapping(value = "/{id}")
     @Override
-    public ResponseEntity<Boolean> deleteById(
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteById(
             @PathVariable @NotBlank Long id) {
-        boolean result = commentService.deleteById(id);
-        return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
+        commentService.deleteById(id);
     }
 
     private CommentDtoRequest applyPatchAuthor(JsonPatch patch, CommentDtoResponse commentDtoResponse) throws JsonPatchException, JsonProcessingException {

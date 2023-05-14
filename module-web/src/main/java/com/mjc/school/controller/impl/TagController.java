@@ -62,7 +62,8 @@ public class TagController implements BaseRestController<TagDtoRequest, TagDtoRe
         return new ResponseEntity<>(tagDtoResponse, HttpStatus.OK);
     }
 
-    @PostMapping(consumes = {"application/JSON"}, produces = {"application/JSON", "application/XML"})
+    @PostMapping(value = "/create", consumes = "application/json", produces = {"application/json", "application/xml"})
+    @ResponseStatus(HttpStatus.CREATED)
     @Override
     public ResponseEntity<TagDtoResponse> create(
             @RequestBody @Valid TagDtoRequest createRequest) {
@@ -98,9 +99,10 @@ public class TagController implements BaseRestController<TagDtoRequest, TagDtoRe
 
     @DeleteMapping(value = "/{id}")
     @Override
-    public ResponseEntity<Boolean> deleteById(
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteById(
             @PathVariable @NotBlank Long id) {
-        return new ResponseEntity<>(tagService.deleteById(id), HttpStatus.NO_CONTENT);
+        tagService.deleteById(id);
     }
 
     private TagDtoRequest applyPatchAuthor(JsonPatch patch, TagDtoResponse tagDtoResponse) throws JsonPatchException, JsonProcessingException {

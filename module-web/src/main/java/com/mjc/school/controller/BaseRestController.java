@@ -17,5 +17,5 @@ public interface BaseRestController<T, R, K> {
 
     ResponseEntity<R> patch(K id, JsonPatch patch) throws JsonPatchException, JsonProcessingException;
 
-    ResponseEntity<Boolean> deleteById(K id);
+    void deleteById(K id);
 }

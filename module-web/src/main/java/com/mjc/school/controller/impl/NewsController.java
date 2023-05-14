@@ -66,7 +66,8 @@ public class NewsController implements BaseRestController<NewsDtoRequest, NewsDt
         return new ResponseEntity<>(newsDtoResponse, HttpStatus.OK);
     }
 
-    @PostMapping(consumes = {"application/JSON"}, produces = {"application/JSON", "application/XML"})
+    @PostMapping(value = "/create", consumes = "application/json", produces = {"application/json", "application/xml"})
+    @ResponseStatus(HttpStatus.CREATED)
     @Override
     public ResponseEntity<NewsDtoResponse> create(@RequestBody @Valid NewsDtoRequest createRequest) {
         NewsDtoResponse newsDtoResponse = newsService.create(createRequest);
@@ -100,9 +101,10 @@ public class NewsController implements BaseRestController<NewsDtoRequest, NewsDt
 
     @DeleteMapping(value = "/{id}")
     @Override
-    public ResponseEntity<Boolean> deleteById(
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteById(
             @PathVariable @NotBlank Long id) {
-        return new ResponseEntity<>(newsService.deleteById(id), HttpStatus.NO_CONTENT);
+        newsService.deleteById(id);
     }
 
     private NewsDtoRequest applyPatchAuthor(JsonPatch patch, NewsDtoResponse newsDtoResponse) throws JsonPatchException, JsonProcessingException {
