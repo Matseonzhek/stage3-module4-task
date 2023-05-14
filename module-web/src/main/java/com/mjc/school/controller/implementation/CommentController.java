@@ -27,13 +27,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 @RequestMapping(value = "/comments")
-public class CommentRestController implements BaseRestController<CommentDtoRequest, CommentDtoResponse, Long> {
+public class CommentController implements BaseRestController<CommentDtoRequest, CommentDtoResponse, Long> {
 
 
     private final CommentService commentService;
     private final ObjectMapper mapper;
 
-    public CommentRestController(CommentService commentService, ObjectMapper mapper) {
+    public CommentController(CommentService commentService, ObjectMapper mapper) {
         this.commentService = commentService;
         this.mapper = mapper;
     }
@@ -48,10 +48,10 @@ public class CommentRestController implements BaseRestController<CommentDtoReque
         Page<CommentDtoResponse> commentDtoResponsePage = commentService.findAll(pageable);
         for (CommentDtoResponse commentDtoResponse : commentDtoResponsePage) {
             Long id = commentDtoResponse.getId();
-            Link selfLink = linkTo(CommentRestController.class).slash(id).withSelfRel();
+            Link selfLink = linkTo(CommentController.class).slash(id).withSelfRel();
             commentDtoResponse.add(selfLink);
         }
-        Link link = linkTo(CommentRestController.class).withSelfRel();
+        Link link = linkTo(CommentController.class).withSelfRel();
         return new ResponseEntity<>(PagedModel.of(commentDtoResponsePage, link), HttpStatus.OK);
     }
 

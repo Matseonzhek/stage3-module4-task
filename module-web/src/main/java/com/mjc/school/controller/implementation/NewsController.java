@@ -27,14 +27,14 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 @RequestMapping(value = "/news")
-public class NewsRestController implements BaseRestController<NewsDtoRequest, NewsDtoResponse, Long> {
+public class NewsController implements BaseRestController<NewsDtoRequest, NewsDtoResponse, Long> {
 
 
     private final NewsService newsService;
     private final ObjectMapper mapper;
 
 
-    public NewsRestController(NewsService newsService, ObjectMapper mapper) {
+    public NewsController(NewsService newsService, ObjectMapper mapper) {
         this.newsService = newsService;
         this.mapper = mapper;
     }
@@ -51,10 +51,10 @@ public class NewsRestController implements BaseRestController<NewsDtoRequest, Ne
         Page<NewsDtoResponse> newsDtoResponsePage = newsService.findAll(pageable);
         for (NewsDtoResponse newsDtoResponse : newsDtoResponsePage) {
             Long id = newsDtoResponse.getId();
-            Link selfLink = linkTo(NewsRestController.class).slash(id).withSelfRel();
+            Link selfLink = linkTo(NewsController.class).slash(id).withSelfRel();
             newsDtoResponse.add(selfLink);
         }
-        Link link = linkTo(NewsRestController.class).withSelfRel();
+        Link link = linkTo(NewsController.class).withSelfRel();
         return new ResponseEntity<>(PagedModel.of(newsDtoResponsePage, link), HttpStatus.OK);
     }
 

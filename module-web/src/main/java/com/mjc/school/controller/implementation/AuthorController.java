@@ -29,13 +29,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @RestController
 @RequestMapping(value = "authors")
 @Validated
-public class AuthorRestController implements BaseRestController<AuthorDtoRequest, AuthorDtoResponse, Long> {
+public class AuthorController implements BaseRestController<AuthorDtoRequest, AuthorDtoResponse, Long> {
 
     private final AuthorService authorService;
     private final ObjectMapper mapper;
 
 
-    public AuthorRestController(AuthorService authorService, ObjectMapper mapper) {
+    public AuthorController(AuthorService authorService, ObjectMapper mapper) {
         this.authorService = authorService;
         this.mapper = mapper;
     }
@@ -51,10 +51,10 @@ public class AuthorRestController implements BaseRestController<AuthorDtoRequest
         Page<AuthorDtoResponse> authorDtoResponsePage = authorService.findAll(pageable);
         for (AuthorDtoResponse authorDtoResponse : authorDtoResponsePage) {
             Long id = authorDtoResponse.getId();
-            Link selLink = linkTo(AuthorRestController.class).slash(id).withSelfRel();
+            Link selLink = linkTo(AuthorController.class).slash(id).withSelfRel();
             authorDtoResponse.add(selLink);
         }
-        Link link = linkTo(AuthorRestController.class).withSelfRel();
+        Link link = linkTo(AuthorController.class).withSelfRel();
         return new ResponseEntity<>(PagedModel.of(authorDtoResponsePage, link), HttpStatus.OK);
     }
 

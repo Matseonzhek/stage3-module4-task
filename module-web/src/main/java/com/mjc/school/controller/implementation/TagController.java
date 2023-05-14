@@ -27,12 +27,12 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 @RequestMapping(value = "/tags")
-public class TagRestController implements BaseRestController<TagDtoRequest, TagDtoResponse, Long> {
+public class TagController implements BaseRestController<TagDtoRequest, TagDtoResponse, Long> {
 
     private final TagService tagService;
     private final ObjectMapper mapper;
 
-    public TagRestController(TagService tagService, ObjectMapper mapper) {
+    public TagController(TagService tagService, ObjectMapper mapper) {
         this.tagService = tagService;
         this.mapper = mapper;
     }
@@ -47,10 +47,10 @@ public class TagRestController implements BaseRestController<TagDtoRequest, TagD
         Page<TagDtoResponse> tagDtoResponsePage = tagService.findAll(pageable);
         for (TagDtoResponse tagDtoResponse : tagDtoResponsePage) {
             Long id = tagDtoResponse.getId();
-            Link selfLink = linkTo(TagRestController.class).slash(id).withSelfRel();
+            Link selfLink = linkTo(TagController.class).slash(id).withSelfRel();
             tagDtoResponse.add(selfLink);
         }
-        Link link = linkTo(TagRestController.class).withSelfRel();
+        Link link = linkTo(TagController.class).withSelfRel();
         return new ResponseEntity<>(PagedModel.of(tagDtoResponsePage, link), HttpStatus.OK);
     }
 
