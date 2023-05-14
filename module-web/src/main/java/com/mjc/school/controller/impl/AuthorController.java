@@ -1,4 +1,4 @@
-package com.mjc.school.controller.implementation;
+package com.mjc.school.controller.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
