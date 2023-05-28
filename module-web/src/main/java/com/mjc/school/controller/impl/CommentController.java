@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
@@ -53,6 +54,11 @@ public class CommentController implements BaseRestController<CommentDtoRequest, 
         }
         Link link = linkTo(CommentController.class).withSelfRel();
         return new ResponseEntity<>(PagedModel.of(commentDtoResponsePage, link), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "news/{id}/comments")
+    public ResponseEntity<List<CommentDtoResponse>> readCommentsByNewsId(@PathVariable @NotBlank Long id) {
+        return new ResponseEntity<>(commentService.readCommentsByNewsId(id), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")

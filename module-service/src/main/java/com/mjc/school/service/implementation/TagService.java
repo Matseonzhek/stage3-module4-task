@@ -49,6 +49,11 @@ public class TagService implements BaseService<TagDtoRequest, TagDtoResponse, Lo
         } else throw new NotFoundException(String.format(TAG_ID_DOES_NOT_EXIST.getMessage(), id));
     }
 
+    @Validate(value = "checkId")
+    public List<TagDtoResponse> readTagsByNewsId(Long newsId) {
+        return TagMapper.INSTANCE.listTagToTagDtoResponse(tagRepository.readTagsByNewsId(newsId));
+    }
+
     @Validate(value = "checkTag")
     @Transactional
     @Override

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
@@ -60,6 +61,12 @@ public class TagController implements BaseRestController<TagDtoRequest, TagDtoRe
             @PathVariable @NotBlank Long id) {
         TagDtoResponse tagDtoResponse = tagService.readById(id);
         return new ResponseEntity<>(tagDtoResponse, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "news/{id}/tags")
+    public ResponseEntity<List<TagDtoResponse>> readTagsByNewsId(@PathVariable @NotBlank Long id) {
+        List<TagDtoResponse> tagDtoResponseList = tagService.readTagsByNewsId(id);
+        return new ResponseEntity<>(tagDtoResponseList, HttpStatus.OK);
     }
 
     @PostMapping(value = "/create", consumes = "application/json", produces = {"application/json", "application/xml"})

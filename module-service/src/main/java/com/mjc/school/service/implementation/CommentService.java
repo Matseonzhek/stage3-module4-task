@@ -57,6 +57,12 @@ public class CommentService implements BaseService<CommentDtoRequest, CommentDto
 
     @Transactional
     @Validate(value = "checkComment")
+    public List<CommentDtoResponse> readCommentsByNewsId(Long newsId) {
+        return CommentMapper.INSTANCE.listCommentToCommentDtoResponse(commentRepository.readCommentsByNewsId(newsId));
+    }
+
+    @Transactional
+    @Validate(value = "checkComment")
     @Override
     public CommentDtoResponse create(CommentDtoRequest createRequest) {
         if (newsRepository.existById(createRequest.getNewsModelId())) {
@@ -90,6 +96,7 @@ public class CommentService implements BaseService<CommentDtoRequest, CommentDto
     }
 
     @Transactional
+    @Validate(value = "checkComment")
     public CommentDtoResponse patch(CommentDtoRequest commentDtoRequest) {
         CommentModel commentModel = commentRepository.readById(commentDtoRequest.getId()).get();
         NewsModel newsModel = commentModel.getNewsModel();

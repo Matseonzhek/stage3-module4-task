@@ -44,6 +44,12 @@ public class TagRepository implements BaseRepository<TagModel, Long> {
         return Optional.ofNullable(tagModel);
     }
 
+    public List<TagModel> readTagsByNewsId(Long newsId) {
+        String jpql = " select tags from TagModel tags inner join tags.tags news where news.id =:newsId";
+        TypedQuery<TagModel> query = entityManager.createQuery(jpql, TagModel.class);
+        return query.setParameter("newsId", newsId).getResultList();
+    }
+
     @Override
     public TagModel create(TagModel entity) {
         entityManager.persist(entity);

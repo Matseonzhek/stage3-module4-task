@@ -86,18 +86,6 @@ public class NewsRepository implements BaseRepository<NewsModel, Long> {
         return count > 0;
     }
 
-    public AuthorModel getAuthorByNewsId(Long id) {
-        return (AuthorModel) entityManager.createQuery("select authors from AuthorModel authors, NewsModel news" +
-                " where news.authorModel = authors and news.id=?1").setParameter(1, id).getSingleResult();
-    }
-
-    public List<TagModel> getTagByNewsId(Long id) {
-        String jpql = " select  tagModel from  NewsModel as newsModel " +
-                " join newsModel.taggedNews tagModel  " +
-                " where newsModel.id=?1";
-        TypedQuery<TagModel> query = entityManager.createQuery(jpql, TagModel.class).setParameter(1, id);
-        return query.getResultList();
-    }
 
     public List<NewsModel> getNewsByOption(String tagName, Long tagId, String authorName, String title, String content) {
 

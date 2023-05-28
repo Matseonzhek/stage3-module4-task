@@ -27,6 +27,7 @@ public class CommentModel implements BaseEntity<Long>, Serializable {
     private LocalDateTime updatedDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "news_id")
     private NewsModel newsModel;
 
     public CommentModel(Long id, String content, LocalDateTime createdDate, LocalDateTime updatedDate, NewsModel newsModel) {

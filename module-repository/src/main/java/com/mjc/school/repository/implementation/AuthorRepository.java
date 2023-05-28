@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
@@ -68,6 +69,17 @@ public class AuthorRepository implements BaseRepository<AuthorModel, Long> {
             return authorModel;
         }
         return null;
+    }
+
+    public Optional<AuthorModel> readAuthorByNewsId(Long newsId) {
+        String jpql = " select authors from AuthorModel authors, NewsModel news where news.authorModel = authors and" +
+                " news.id =:newsId";
+        TypedQuery<AuthorModel> query = entityManager.createQuery(jpql, AuthorModel.class);
+        try {
+            return Optional.of(query.setParameter("newsId", newsId).getSingleResult());
+        } catch (NoResultException ex) {
+            return Optional.empty();
+        }
     }
 
     @Override

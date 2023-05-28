@@ -66,8 +66,8 @@ insert into news_tag values (3, 2);
 insert into news_tag values (3, 5);
 
 
-insert into comments (content, createddate, updateddate, newsmodel_id) values ('Comment #1','2023-01-01T18:49:09','2023-06-06T14:15:44', 2);
-insert into comments (content, createddate, updateddate,newsmodel_id) values ('Comment #2','2023-02-02T18:49:09','2023-05-05T14:15:44', 1);
-insert into comments (content, createddate, updateddate, newsmodel_id) values ('Comment #3','2023-03-03T18:49:09','2023-04-04T14:15:44',1);
-insert into comments (content, createddate, updateddate, newsmodel_id) values ('Comment #4','2023-04-23T18:49:09','2023-10-05T14:15:44',2);
-insert into comments (content, createddate, updateddate, newsmodel_id) values ('Comment #5','2023-05-01T18:49:09','2023-09-05T14:15:44',3);
+insert into comments (content, createddate, updateddate, news_id) values ('Comment #1','2023-01-01T18:49:09','2023-06-06T14:15:44', 2);
+insert into comments (content, createddate, updateddate,news_id) values ('Comment #2','2023-02-02T18:49:09','2023-05-05T14:15:44', 1);
+insert into comments (content, createddate, updateddate, news_id) values ('Comment #3','2023-03-03T18:49:09','2023-04-04T14:15:44',1);
+insert into comments (content, createddate, updateddate, news_id) values ('Comment #4','2023-04-23T18:49:09','2023-10-05T14:15:44',2);
+insert into comments (content, createddate, updateddate, news_id) values ('Comment #5','2023-05-01T18:49:09','2023-09-05T14:15:44',3);

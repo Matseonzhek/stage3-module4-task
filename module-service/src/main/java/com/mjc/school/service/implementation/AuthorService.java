@@ -20,6 +20,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 import static com.mjc.school.service.exception.ServiceErrorCode.AUTHOR_ID_DOES_NOT_EXIST;
+import static com.mjc.school.service.exception.ServiceErrorCode.NEWS_ID_DOES_NOT_EXIST;
 
 @Service(value = "authorService")
 public class AuthorService implements BaseService<AuthorDtoRequest, AuthorDtoResponse, Long>, PageService<AuthorDtoRequest, AuthorDtoResponse, Long> {
@@ -48,6 +49,15 @@ public class AuthorService implements BaseService<AuthorDtoRequest, AuthorDtoRes
             return AuthorMapper.INSTANCE.authorModelToAuthorDtoResponse(authorRepository.readById(id).get());
         } else {
             throw new NotFoundException(String.format(AUTHOR_ID_DOES_NOT_EXIST.getMessage(), id));
+        }
+    }
+
+    @Validate(value = "checkId")
+    public AuthorDtoResponse readAuthorByNewsId(Long newsId) {
+        if (authorRepository.readAuthorByNewsId(newsId).isPresent()) {
+            return AuthorMapper.INSTANCE.authorModelToAuthorDtoResponse(authorRepository.readAuthorByNewsId(newsId).get());
+        } else {
+            throw new NotFoundException(String.format(NEWS_ID_DOES_NOT_EXIST.getMessage(), newsId));
         }
     }
 

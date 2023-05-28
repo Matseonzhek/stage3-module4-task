@@ -43,6 +43,12 @@ public class CommentRepository implements BaseRepository<CommentModel, Long> {
         return Optional.ofNullable(commentModel);
     }
 
+    public List<CommentModel> readCommentsByNewsId(Long newsId) {
+        String jpql = " select comments from CommentModel comments inner join comments.newsModel news where news.id =:newsId";
+        TypedQuery<CommentModel> query = entityManager.createQuery(jpql, CommentModel.class);
+        return query.setParameter("newsId", newsId).getResultList();
+    }
+
     @Override
     public CommentModel create(CommentModel entity) {
         entityManager.persist(entity);

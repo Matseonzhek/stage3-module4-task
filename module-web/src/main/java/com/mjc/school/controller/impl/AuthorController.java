@@ -65,6 +65,12 @@ public class AuthorController implements BaseRestController<AuthorDtoRequest, Au
         return new ResponseEntity<>(authorDtoResponse, HttpStatus.OK);
     }
 
+    @GetMapping(value = "news/{id}/authors")
+    public ResponseEntity<AuthorDtoResponse> readAuthorByNewsId(@PathVariable @NotBlank Long id) {
+        AuthorDtoResponse authorDtoResponse = authorService.readAuthorByNewsId(id);
+        return new ResponseEntity<>(authorDtoResponse, HttpStatus.OK);
+    }
+
     @PostMapping(value = "/create", consumes = "application/json", produces = {"application/json", "application/xml"})
     @ResponseStatus(HttpStatus.CREATED)
     @Override

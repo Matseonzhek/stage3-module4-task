@@ -12,14 +12,10 @@ import com.mjc.school.repository.model.TagModel;
 import com.mjc.school.service.BaseService;
 import com.mjc.school.service.PageService;
 import com.mjc.school.service.annotation.Validate;
-import com.mjc.school.service.dto.AuthorDtoResponse;
 import com.mjc.school.service.dto.NewsDtoRequest;
 import com.mjc.school.service.dto.NewsDtoResponse;
-import com.mjc.school.service.dto.TagDtoResponse;
 import com.mjc.school.service.exception.NotFoundException;
-import com.mjc.school.service.interfaces.AuthorMapper;
 import com.mjc.school.service.interfaces.NewsMapper;
-import com.mjc.school.service.interfaces.TagMapper;
 import com.mjc.school.service.utils.NewsPageConvert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -138,19 +134,6 @@ NewsService implements BaseService<NewsDtoRequest, NewsDtoResponse, Long>, PageS
         } else {
             throw new NotFoundException(String.format(NEWS_ID_DOES_NOT_EXIST.getMessage(), id));
         }
-    }
-
-
-    public AuthorDtoResponse getAuthorByNewsId(Long id) {
-        if (newsRepository.existById(id)) {
-            return AuthorMapper.INSTANCE.authorModelToAuthorDtoResponse(newsRepository.getAuthorByNewsId(id));
-        } else throw new NotFoundException(String.format(NEWS_ID_DOES_NOT_EXIST.getMessage(), id));
-    }
-
-    public List<TagDtoResponse> getTagByNewsId(Long id) {
-        if (newsRepository.existById(id)) {
-            return TagMapper.INSTANCE.listTagToTagDtoResponse(newsRepository.getTagByNewsId(id));
-        } else throw new NotFoundException(String.format(NEWS_ID_DOES_NOT_EXIST.getMessage(), id));
     }
 
     public List<NewsDtoResponse> getNewsByOption(String tagName, Long tagId, String authorName, String title, String content) {
