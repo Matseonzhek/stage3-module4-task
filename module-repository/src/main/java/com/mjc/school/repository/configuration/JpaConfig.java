@@ -72,7 +72,8 @@ public class JpaConfig {
         hibernateProperties.setProperty("hibernate.dialect", environment.getProperty("spring.jpa.properties.hibernate.dialect"));
         hibernateProperties.setProperty("hibernate.show_sql", environment.getProperty("spring.jpa.show-sql"));
         hibernateProperties.setProperty("hibernate.auto_quote_keyword", environment.getProperty("spring.jpa.properties.hibernate.auto_quote_keyword"));
-
+        hibernateProperties.setProperty("hibernate.hbm2ddl.auto", environment.getProperty("spring.jpa.hibernate.ddl-auto"));
+        hibernateProperties.setProperty("hibernate.hbm2ddl.import_files","data.sql");
         return hibernateProperties;
     }
 

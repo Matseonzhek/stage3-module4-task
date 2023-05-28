@@ -19,7 +19,7 @@ public class AuthorModel implements BaseEntity<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String name;
     @Column(name = "createdDate", nullable = false, updatable = false)
     @CreatedDate

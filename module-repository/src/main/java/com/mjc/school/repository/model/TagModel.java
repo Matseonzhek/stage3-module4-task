@@ -12,7 +12,7 @@ public class TagModel implements BaseEntity<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
+    @Column(unique = true)
     private String name;
 
     @ManyToMany(mappedBy = "taggedNews", fetch = FetchType.LAZY)
