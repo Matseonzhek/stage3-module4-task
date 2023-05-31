@@ -32,6 +32,8 @@ subprojects {
         implementation 'com.github.java-json-tools:json-patch:1.13'
         implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.0'
         implementation 'org.hibernate:hibernate-validator:6.0.18.Final'
+        implementation 'io.springfox:springfox-boot-starter:3.0.0'
+
 
 
 

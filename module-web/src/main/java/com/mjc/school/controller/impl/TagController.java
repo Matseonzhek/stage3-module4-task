@@ -9,6 +9,10 @@ import com.mjc.school.controller.BaseRestController;
 import com.mjc.school.service.dto.TagDtoRequest;
 import com.mjc.school.service.dto.TagDtoResponse;
 import com.mjc.school.service.implementation.TagService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +32,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 @RequestMapping(value = "/tags")
+@Api(produces = "application/json",
+        value = "Operations for creating, updating, retrieving and deleting TAGS in the application")
 public class TagController implements BaseRestController<TagDtoRequest, TagDtoResponse, Long> {
 
     private final TagService tagService;
@@ -40,6 +46,15 @@ public class TagController implements BaseRestController<TagDtoRequest, TagDtoRe
 
     @GetMapping
     @Override
+    @ApiOperation(value = "View list of all news", response = CollectionModel.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successfully displayed page of news"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    }
+    )
     public ResponseEntity<CollectionModel<TagDtoResponse>> findAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "5") int size,
@@ -57,6 +72,15 @@ public class TagController implements BaseRestController<TagDtoRequest, TagDtoRe
 
     @GetMapping(value = "/{id}")
     @Override
+    @ApiOperation(value = "Get tag by ID", response = TagDtoResponse.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successfully displayed tag"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    }
+    )
     public ResponseEntity<TagDtoResponse> readById(
             @PathVariable @NotBlank Long id) {
         TagDtoResponse tagDtoResponse = tagService.readById(id);
@@ -64,6 +88,15 @@ public class TagController implements BaseRestController<TagDtoRequest, TagDtoRe
     }
 
     @GetMapping(value = "news/{id}/tags")
+    @ApiOperation(value = "Get tags by news ID", response = List.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successfully displayed tags"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    }
+    )
     public ResponseEntity<List<TagDtoResponse>> readTagsByNewsId(@PathVariable @NotBlank Long id) {
         List<TagDtoResponse> tagDtoResponseList = tagService.readTagsByNewsId(id);
         return new ResponseEntity<>(tagDtoResponseList, HttpStatus.OK);
@@ -72,6 +105,15 @@ public class TagController implements BaseRestController<TagDtoRequest, TagDtoRe
     @PostMapping(value = "/create", consumes = "application/json", produces = {"application/json", "application/xml"})
     @ResponseStatus(HttpStatus.CREATED)
     @Override
+    @ApiOperation(value = "Create tag", response = TagDtoResponse.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successfully created tag"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    }
+    )
     public ResponseEntity<TagDtoResponse> create(
             @RequestBody @Valid TagDtoRequest createRequest) {
         TagDtoResponse tagDtoResponse = tagService.create(createRequest);
@@ -80,6 +122,15 @@ public class TagController implements BaseRestController<TagDtoRequest, TagDtoRe
 
     @PutMapping(value = "/{id}")
     @Override
+    @ApiOperation(value = "Update tag", response = TagDtoResponse.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successfully updated tag"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    }
+    )
     public ResponseEntity<TagDtoResponse> update(
             @PathVariable @NotBlank Long id,
             @RequestBody @Valid TagDtoRequest updateRequest) {
@@ -89,6 +140,15 @@ public class TagController implements BaseRestController<TagDtoRequest, TagDtoRe
 
     @PatchMapping(value = "/{id}", consumes = "application/json-patch+json")
     @Override
+    @ApiOperation(value = "Update tag", response = TagDtoResponse.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successfully updated tag"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    }
+    )
     public ResponseEntity<TagDtoResponse> patch(
             @PathVariable @NotBlank Long id,
             @RequestBody JsonPatch patch) {
@@ -107,6 +167,15 @@ public class TagController implements BaseRestController<TagDtoRequest, TagDtoRe
     @DeleteMapping(value = "/{id}")
     @Override
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiOperation(value = "Delete news")
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Successfully deleted news"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
+            @ApiResponse(code = 500, message = "Application failed to process the request")
+    }
+    )
     public void deleteById(
             @PathVariable @NotBlank Long id) {
         tagService.deleteById(id);
